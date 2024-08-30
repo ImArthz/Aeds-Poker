@@ -8,8 +8,6 @@
 #include <unordered_map>
 #include <tuple>
 #include <fstream> // Biblioteca para manipulação de arquivos
-#include "characteristic_matrix.h"
-#include "minhash_signature.h"
 #include "leitura_input.cpp" // Inclua o arquivo leitura_input.cpp
 
 using namespace std;

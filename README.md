@@ -170,60 +170,58 @@ Com estas melhorias, o código pode ser aplicado a uma variedade de problemas e 
 
 [![Output: Support and Confidence (C++)](https://img.shields.io/badge/Output%20Suporte%20e%20Confianca-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/support_confidence_cpp.txt)
 
-### Descrição Geral
-O código `calculo_suporte_confianca.cpp` calcula o suporte e a confiança para uma nova entrada de dados, utilizando informações de tuplas e classes previamente carregadas. Os resultados são salvos em um arquivo de saída.
+
+## Descrição Geral
+
+O código `calculo_suporte_confianca.cpp` calcula o suporte e a confiança para uma nova entrada de dados, utilizando informações de tuplas e classes previamente carregadas. Os resultados são salvos em um arquivo de saída. Este código é projetado para ser executado em ambientes Linux e utiliza paralelismo para melhorar o desempenho.
 
 ### Componentes e Funções
-* **`calculateSupport` e `calculateConfidence`:** Calculam o suporte e a confiança, respectivamente, com base na interseção entre conjuntos de linhas.
-* **`generateCombinations`:** Gera todas as combinações possíveis de um determinado tamanho a partir de um vetor de elementos.
-* **`calculateSupportAndConfidence`:** Calcula o suporte e a confiança para todas as combinações possíveis de tuplas em uma nova entrada e salva os resultados.
-* **`main`:** Função principal que coordena o processo de cálculo e escrita.
+
+* **calculateSupport:** Calcula o suporte com base na interseção entre conjuntos de linhas. O suporte é a proporção de linhas que contêm o conjunto de itens em relação ao total de linhas da classe.
+* **calculateConfidence:** Calcula a confiança, que é a proporção de linhas que contêm tanto o conjunto de itens quanto a classe em relação ao total de linhas que contêm o conjunto de itens.
+* **generateCombinations:** Gera todas as combinações possíveis de um determinado tamanho a partir de um vetor de elementos. Utiliza uma abordagem de combinação baseada em permutações.
+* **calculateSupportAndConfidence:** Calcula o suporte e a confiança para todas as combinações possíveis de tuplas em uma nova entrada e salva os resultados em um arquivo de saída.
+* **main:** Função principal que coordena o processo de cálculo e escrita. Ela processa os arquivos de entrada, cria diretórios se necessário, divide o trabalho entre várias threads para calcular suporte e confiança, e grava os resultados em um arquivo.
 
 ### Estruturas de Dados
-* **`tupleLines`:** Mapeia tuplas para os números de linhas correspondentes.
-* **`classLines`:** Mapeia rótulos de classe para os números de linhas correspondentes.
+
+* **tupleLines:** Mapeia tuplas para os números de linhas correspondentes.
+* **classLines:** Mapeia rótulos de classe para os números de linhas correspondentes.
 
 ### Exemplo de Uso
+
 ```bash
-g++ calculo_suporte_confianca.cpp -o calculo_suporte_confianca
+g++ calculo_suporte_confianca.cpp -o calculo_suporte_confianca -lpthread
 ./calculo_suporte_confianca
 ```
-### Entrada e Saída
-* **Entrada:** `poker-hand-testing.data` (pode variar) - Contém dados de tuplas e classes.
-* **Saída:** `support_confidence_cpp.txt` - Contém os resultados de suporte e confiança.
+## Entrada e Saída
+
+* **Entrada:**
+    * `poker-hand-training.data` e `poker-hand-testing.data` (caminhos podem variar) - Contêm dados de tuplas e classes.
+* **Saída:**
+    * `support_confidence_cpp.txt` - Contém os resultados de suporte e confiança.
 
 ### Observações
+
 * **Suporte e Confiança:** São medidas utilizadas em mineração de dados para avaliar a frequência e a força de associações entre itens.
 * **Aplicações:**
-  * **Análise de dados de transações:** Identificar padrões de compra, como "clientes que compram pão também compram leite".
-  * **Análise de dados de poker:** Analisar a relação entre diferentes mãos de poker e suas probabilidades de vitória.
+    * **Análise de dados de transações:** Identificar padrões de compra, como "clientes que compram pão também compram leite".
+    * **Análise de dados de poker:** Analisar a relação entre diferentes mãos de poker e suas probabilidades de vitória.
 
 Este código é útil para a análise de dados e a descoberta de regras de associação em diversos contextos.
 
 ### Sugestões para Melhorias
-* **Otimizações:** 
-  * Explorar algoritmos mais eficientes para gerar combinações e calcular suporte e confiança, especialmente para grandes conjuntos de dados.
-  * Considerar o uso de estruturas de dados mais adequadas para os cálculos.
+
+* **Otimizações:**
+    * Explorar algoritmos mais eficientes para gerar combinações e calcular suporte e confiança, especialmente para grandes conjuntos de dados.
+    * Considerar o uso de estruturas de dados mais adequadas para os cálculos.
 * **Flexibilidade:**
-  * Permitir a configuração de diferentes medidas de suporte e confiança (e.g., lift, confiança condicional).
-  * Adaptar o código para trabalhar com diferentes formatos de entrada.
+    * Permitir a configuração de diferentes medidas de suporte e confiança (e.g., lift, confiança condicional).
+    * Adaptar o código para trabalhar com diferentes formatos de entrada.
 * **Visualização:**
-  * Implementar uma interface para visualizar os resultados de forma gráfica (e.g., utilizando bibliotecas como Matplotlib ou Plotly).
+    * Implementar uma interface para visualizar os resultados de forma gráfica (e.g., utilizando bibliotecas como Matplotlib ou Plotly).
 
 Com estas melhorias, o código pode ser aplicado a uma variedade de problemas de mineração de dados e se tornar uma ferramenta mais poderosa e versátil.
-### Função `runProgram`
-
-A função `runProgram` é responsável por executar um programa externo a partir do código C++. Ela leva o nome do programa (sem extensão) como argumento e verifica o sistema operacional para executar o programa de forma adequada.
-
-* **`#ifdef _WIN32`:** Bloco condicional que verifica se o código está sendo compilado no Windows.
-    * Utiliza a API do Windows (`CreateProcessA`, `WaitForSingleObject`, etc.) para criar e esperar por um processo filho que executará o programa desejado.
-    * Adiciona a extensão `.exe` ao nome do programa antes da execução.
-    * Verifica o código de saída do programa para detectar erros.
-* **`#else`:** Bloco condicional executado em sistemas operacional diferentes do Windows (presumivelmente Linux).
-    * Utiliza a função `fork` para criar um processo filho.
-    * No processo filho, utiliza `execl` para substituir o processo atual pelo programa externo.
-    * No processo pai, utiliza `waitpid` para esperar o processo filho terminar e verifica o código de saída para detectar erros.
-
 ### Função `main`
 
 [![main](https://img.shields.io/badge/main-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/main.cpp)
@@ -249,29 +247,18 @@ Data: 16 de Julho de 2024
 Neste trabalho, desenvolvemos e avaliamos um algoritmo de classificação baseado no Lazy Associative Classification (LAC). O LAC utiliza uma abordagem "preguiçosa" para a classificação, gerando a base de dados necessária para as previsões apenas durante o processo de classificação. Utilizamos listas, pilhas, filas e tabelas hash para implementar este algoritmo, com o objetivo de classificar novas entradas com base em dados de treinamento fornecidos.
 
 ### 2. Implementação e Resultados
-```bash
-Suporte e Confianca para a nova entrada:
-Classe: 0, Suporte: 2.18826e-006, Confianca: 0.0141743
-Classe: 1, Suporte: 1.29796e-006, Confianca: 0.00318528
-Classe: 2, Suporte: 1.15154e-005, Confianca: 0.00140936
-Classe: 3, Suporte: 4.42916e-005, Confianca: 0.0118166
-Classe: 4, Suporte: 0.000298916, Confianca: 0.0142775
-Classe: 5, Suporte: 0.000468679, Confianca: 0.0117975
-Classe: 6, Suporte: 0.000158572, Confianca: 0.000675892
-Classe: 7, Suporte: 0.00532959, Confianca: 0.0142862
-Classe: 8, Suporte: 0.0456989, Confianca: 0.00140936
-Classe: 9, Suporte: 0.107527, Confianca: 0.000733471
-```
+![Output Suporte e Confiança](https://img.shields.io/badge/output%20Suporte%20e%20Confiança-Output-blue)]
 
 O algoritmo foi implementado em C++ e validado em um ambiente Linux. A análise dos resultados gerados revelou:
 
-* **Suporte e Confiança:**
-    * A Classe 9 apresentou o maior suporte, mas a menor confiança, indicando que é a classe mais frequente, mas com menor precisão nas previsões.
-    * A Classe 8 apresentou um bom equilíbrio entre suporte e confiança.
-    * Classes com baixo suporte tiveram menor confiança, indicando desafios na previsão.
-* **Processamento de Dados:**
-    * O algoritmo processou as entradas uma a uma, calculando suporte e confiança para cada combinação de características.
-    * O resultado final foi uma lista classificada de entradas com a classe atribuída.
+
+A análise dos resultados de suporte e confiança obtidos mostra variações significativas entre as diferentes linhas e classes de dados. De maneira geral, os valores de suporte e confiança são bastante variados, indicando que a presença de certas características pode influenciar de maneira diferente o suporte e a confiança dependendo da linha e da classe.
+
+Observa-se que a confiança tende a ser um pouco mais alta para a classe 1 em comparação com a classe 0 em várias linhas, o que pode sugerir uma tendência geral de que as características associadas à classe 1 são mais fortemente associadas às classes de interesse no conjunto de dados.
+
+Além disso, o suporte também apresenta variações, com algumas linhas mostrando um suporte relativamente alto para a classe 0, o que pode indicar que essas características específicas ocorrem com maior frequência nesse contexto.
+
+Esses resultados são úteis para entender as relações e padrões nos dados, e podem fornecer insights para futuras análises e decisões relacionadas ao problema em questão. No entanto, uma análise mais detalhada e a consideração de mais linhas de dados podem ser necessárias para obter conclusões mais robustas e para validar essas observações preliminares.
 
 ### 3. Considerações sobre a Documentação e Entrega
 O trabalho foi documentado de acordo com os requisitos estabelecidos, incluindo:

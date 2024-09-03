@@ -49,8 +49,8 @@ def write_similarities_to_file(similarities, output_filename):
 print(f"------------- Jaccard Similarity -------------")
 print(f"Calculando similaridades...")
 
-filename = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/output/tupleMap.txt'  # Substitua pelo caminho correto do arquivo
-output_filename = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/output/similaridadePython.txt'  # Substitua pelo caminho desejado para a saída
+filename = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/c++ test/output/tupleMap.txt'  # Substitua pelo caminho correto do arquivo
+output_filename = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/python test/output_python_test/similaridadePython.txt'  # Substitua pelo caminho desejado para a saída
 
 # Carrega o mapa de tuplas
 tuple_map = load_tuplemap(filename)

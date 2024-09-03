@@ -91,10 +91,9 @@ if __name__ == '__main__':
     print(f"------------- Suporte e Confiança -------------")
     print(f"Calculando suporte e confiança...")
 
-    tuple_map_filename = 'output/tupleMap.txt'
-    class_map_filename = 'output/classMap.txt'
-    output_filename = 'output/support_confidence_python.txt'
-
+    tuple_map_filename = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/c++ test/output/tupleMap.txt'
+    class_map_filename = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/c++ test/output/classMap.txt'
+    output_filename = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/output_python_test/support_confidence_python.txt'
     # Verifica se os arquivos existem antes de carregar
     for filename in [tuple_map_filename, class_map_filename]:
         if not os.path.isfile(filename):

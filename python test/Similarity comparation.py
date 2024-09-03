@@ -60,9 +60,9 @@ def write_comparison_results(discrepancies, iguais, diferentes, output_file):
         file.write(f"Número de pares diferentes: {diferentes}\n")
 
 # Caminhos dos arquivos
-python_similarities_file = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/output/similaridadePython.txt'
-cpp_similarities_file = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/output/similaridade_cpp.txt'
-output_file = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/output/discrepancias.txt'
+python_similarities_file = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/python test/output_python_test/similaridadePython.txt'
+cpp_similarities_file = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/c++ test/output/similaridade_cpp.txt'
+output_file = 'C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/python test/output_python_test/discrepancias.txt'
 
 # Carregando similaridades dos arquivos
 similarities_python = load_similarities_from_file(python_similarities_file)

@@ -123,7 +123,6 @@ int main() {
     cout << "Processando arquivo de dados..." << endl;
     cout << "--------------------------------------------" << endl;
 
-
     try {
         // Substitua o caminho do arquivo pelo caminho correto
         DataProcessor dp("C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/Arquivos/poker-hand-testing.data");
@@ -151,12 +150,17 @@ int main() {
             return 1;
         }
 
-        string output_filename = "/support_confidence_cpp.txt";
-        string output_path = output_dir;
-        calculateSupportAndConfidence(newInstance, tupleLines, classLines, output_filename);
+        // Nome do arquivo de saída
+        string output_filename = "support_confidence_cpp.txt";
+
+        // Caminho completo para o arquivo de saída
+        string output_path = output_dir + "/" + output_filename;
+
+        // Calcula suporte e confiança e salva no arquivo
+        calculateSupportAndConfidence(newInstance, tupleLines, classLines, output_path);
+
         cout << "--------------------------------------------" << endl;
-        cout << "Calculo concluido com sucesso! Resultados gravados em: " << output_filename << endl;
-        //cout << " Path do arquivo : "<< output_path+output_filename << endl; 
+        cout << "Calculo concluido com sucesso! Resultados gravados em: " << output_path << endl;
         cout << "--------------------------------------------" << endl;
     } catch (const exception& e) {
         cerr << "Erro: " << e.what() << endl;

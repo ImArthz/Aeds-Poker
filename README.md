@@ -1,215 +1,340 @@
-# Introdução
+# Algoritmo de Classificação Lazy Associative Classification (LAC)
 
-Este projeto implementa um algoritmo de classificação baseado em regras associativas, conhecido como Lazy Associative Classification (LAC).  
-O LAC é um método de aprendizado de máquina que utiliza regras de associação para classificar novas instâncias com base em dados históricos.  
-O projeto é composto por três arquivos principais:
+## Descrição do Projeto
+Este projeto implementa o algoritmo de classificação Lazy Associative Classification (LAC), conforme especificado na tarefa final do curso de Algoritmos e Estruturas de Dados.
 
-1. `leitura_input.cpp`
-2. `similaridade_jaccard.cpp`
-3. `calculo_suporte_confianca.cpp`
+O LAC é uma abordagem preguiçosa para classificação que difere dos métodos tradicionais por construir a base de conhecimento necessária para a classificação somente no momento da predição. Ao invés de realizar um treinamento extensivo antecipadamente, o LAC utiliza tabelas invertidas para associar atributos a classes, permitindo uma classificação mais eficiente e adaptável a novos dados.
 
-Cada arquivo desempenha um papel específico no processamento dos dados, cálculo de similaridades e avaliação de suporte e confiança para a classificação.
+### Teste em python
 
-## Arquivo 1: leitura_input.cpp
+## Código 1: Cálculo de Similaridades de Jaccard
+[![Jaccard (Python)](https://img.shields.io/badge/Jaccard%20(Python)-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/jaccard%20python.py)
+* **load_tuplemap(filename):** Carrega um mapa de tuplas de um arquivo.
+* **calculate_jaccard(set1, set2):** Calcula o índice de similaridade de Jaccard.
+* **calculate_all_similarities(tuple_map):** Calcula todas as similaridades de Jaccard.
+* **write_similarities_to_file(similarities, output_filename):** Escreve as similaridades em um arquivo.
+[![Output: Jaccard (Python)](https://img.shields.io/badge/View-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/output_python_test/similaridadePython.txt)
+## Código 2: Comparação de Similaridades entre Python e C++
+[![Comparação de Similaridade (python)(c++)](https://img.shields.io/badge/View-Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/Similarity%20comparation.py)
+* **load_similarities_from_file(filename):** Carrega as similaridades de um arquivo.
+* **compare_similarities(similarities_python, similarities_cpp, precision=6):** Compara as similaridades.
+* **write_comparison_results(discrepancies, iguais, diferentes, output_file):** Escreve os resultados da comparação.
+[![output (python vs c++)](https://img.shields.io/badge/View-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/output_python_test/discrepancias.txt)
 
-### Descrição
+## Código 3: Cálculo de Suporte e Confiança
+[![Suporte e Confiança (Python)](https://img.shields.io/badge/Suporte%20e%20Confiança%20(Python)-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/suport_confidence.py)
+* **load_tuple_map(filename):** Carrega o mapa de tuplas.
+* **load_class_map(filename):** Carrega o mapa de classes.
+* **calculate_support_and_confidence_for_class(args):** Calcula suporte e confiança para uma classe.
+* **calculate_support_and_confidence(tuple_map, class_map):** Calcula suporte e confiança para todas as combinações.
+* **write_support_and_confidence_to_file(support_confidence, output_filename):** Escreve os resultados.
 
-Este arquivo é responsável por ler e processar o arquivo de entrada contendo os dados. Ele cria mapas de tuplas e classes que são utilizados posteriormente para cálculos de similaridade e classificação.
+## Nota Final
+O projeto principal está sendo desenvolvido em C++, e estes códigos Python são utilizados para testar as bases de dados e cálculos.
+## Explicação do Código dataprocessor.h
+```bash
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <map>
+#include <tuple>
 
-### Estruturas e Classes
+using namespace std;
 
-- **TupleHash**: Estrutura personalizada de hash para `std::tuple<int, int>`.
-- **DataProcessor**: Classe principal que processa o arquivo de entrada e popula os mapas de tuplas e classes.
+// Classe para processar o arquivo de dados
+class DataProcessor {
+public:
+    DataProcessor(const string& filename) : filename(filename) {}
 
-### Funções Principais
+    void processFile() {
+        ifstream file(filename);
+        string line;
 
-- **`processFile()`**: Lê o arquivo de entrada linha por linha e processa cada linha para preencher os mapas de tuplas e classes.
-- **`processLine()`**: Processa uma linha do arquivo de entrada, dividindo-a em valores e populando os mapas de tuplas e classes.
-- **`writeTupleMapToFile()`**: Escreve o conteúdo do mapa de tuplas em um arquivo de saída.
-- **`writeClassMapToFile()`**: Escreve o conteúdo do mapa de classes em um arquivo de saída.
+        if (!file.is_open()) {
+            cerr << "Não foi possível abrir o arquivo!" << endl;
+            return;
+        }
+
+        // Leitura do arquivo linha por linha
+        while (getline(file, line)) {
+            istringstream iss(line);
+            vector<int> values;
+            string value;
+
+            // Leitura dos valores separados por vírgula
+            while (getline(iss, value, ',')) {
+                values.push_back(stoi(value));
+            }
+
+            if (values.size() >= 2) {
+                int classLabel = values.back(); // Último valor é a classe
+                values.pop_back(); // Remove a classe para deixar apenas os atributos
+                tupleMap[{values[0], values[1]}].push_back(classLabel); // Supondo que estamos usando 2 atributos
+                classMap[classLabel].push_back(values[0]); // Adiciona o atributo à classe
+            }
+        }
+
+        file.close();
+    }
+
+    const map<pair<int, int>, vector<int>>& getTupleMap() const {
+        return tupleMap;
+    }
+
+    const map<int, vector<int>>& getClassMap() const {
+        return classMap;
+    }
+
+private:
+    string filename;
+    map<pair<int, int>, vector<int>> tupleMap;
+    map<int, vector<int>> classMap;
+};
+
+```
+### Descrição Geral
+A classe `DataProcessor` é responsável por processar um arquivo de dados contendo registros que são utilizados para a análise e classificação. O arquivo é lido linha por linha, e os dados são armazenados em estruturas apropriadas para processamento posterior.
+
+### Componentes e Funções
+* **Construtor `DataProcessor(const string& filename)`:** 
+  * Inicializa a classe com o nome do arquivo a ser processado.
+  * Armazena o nome do arquivo em uma variável membro `filename`.
+* **Função `void processFile()`:**
+  * Abre o arquivo de dados.
+  * Lê o arquivo linha por linha, separando os valores e armazenando-os em um vetor.
+  * Remove o rótulo da classe do vetor.
+  * Adiciona os atributos e o rótulo da classe aos mapas `tupleMap` e `classMap`.
+* **Função `const map<pair<int, int>, vector<int>>& getTupleMap() const`:** Retorna o mapa `tupleMap` que associa tuplas de atributos a vetores de rótulos de classe.
+* **Função `const map<int, vector<int>>& getClassMap() const`:** Retorna o mapa `classMap` que associa rótulos de classe a vetores de atributos.
+
+### Estruturas de Dados
+* **`tupleMap`:** Um mapa que associa pares de atributos a vetores de rótulos de classe.
+* **`classMap`:** Um mapa que associa rótulos de classe a vetores de atributos.
 
 ### Exemplo de Uso
-
-
--   DataProcessor dp("caminho/para/arquivo-de-entrada.data");
-    dp.processFile();
-
-## Arquivo 2: similaridade_jaccard.cpp
-
-### Descrição
-
-Este arquivo calcula a similaridade de Jaccard entre as tuplas processadas no arquivo de entrada. A similaridade de Jaccard é uma métrica que avalia a similaridade entre dois conjuntos, sendo especialmente útil em aplicações que envolvem comparação de conjuntos de itens.
-
-### Estruturas e Classes
-
-- **PairIntHash**: Estrutura de hash personalizada para `std::pair<int, int>`, utilizada para otimizar o armazenamento e a busca de pares de inteiros.
-- **PairHash**: Estrutura de hash personalizada para `std::pair<std::pair<int, int>, std::pair<int, int>>`, usada para armazenar pares de pares de inteiros.
-- **JaccardSimilarityCalculator**: Classe principal responsável por calcular as similaridades de Jaccard entre as tuplas processadas.
-
-### Funções Principais
-
-- **`process()`**: Coordena o cálculo das similaridades de Jaccard, incluindo a conversão dos mapas de tuplas, cálculo dos parâmetros necessários e escrita dos resultados em um arquivo.
-- **`convertMaps()`**: Converte estruturas `unordered_map` para `map`, preservando a ordem dos elementos, o que facilita a análise e a visualização dos dados.
-- **`calculateParams()`**: Calcula os parâmetros necessários para a avaliação da similaridade, como a interseção e a união dos conjuntos de tuplas.
-- **`jaccardSimilarity()`**: Calcula a similaridade de Jaccard entre dois conjuntos específicos, retornando um valor que varia de 0 a 1, onde 1 indica máxima similaridade.
-- **`calculateSimilarities()`**: Realiza o cálculo das similaridades entre todas as combinações possíveis de tuplas e armazena os resultados em um `unordered_map`.
-- **`writeSimilaritiesToFile()`**: Escreve as similaridades calculadas em um arquivo de saída para posterior análise.
-
-### Exemplo de Uso
-
-
--   JaccardSimilarityCalculator calculator("caminho/para/arquivo-de-entrada.data");
-    calculator.process();
-
-
-## Arquivo 3: calculo_suporte_confianca.cpp
-
-### Descrição
-
-Este arquivo é responsável pelo cálculo do suporte e da confiança para novas instâncias, utilizando os dados processados previamente.  
-O suporte é uma métrica que indica a frequência com que uma tupla ocorre dentro de uma classe específica nos dados de entrada.  
-A confiança, por outro lado, avalia a probabilidade de uma tupla pertencer a uma classe específica, com base nas ocorrências observadas.
-
-### Funções Principais
-
-- **`calculateSupport()`**: Calcula o suporte de uma tupla, que é definido como a proporção de registros dentro de uma classe que contêm a tupla. Isso ajuda a identificar quão comum uma tupla é dentro de uma classe específica.
-  
-- **`calculateConfidence()`**: Calcula a confiança, que é a proporção de registros que contêm a tupla e pertencem à classe alvo. Essa métrica é essencial para determinar a precisão de uma regra de associação ao prever uma classe específica.
-
-- **`generateCombinations()`**: Gera todas as combinações possíveis de elementos dentro de um conjunto fornecido. Essa função é útil para avaliar o suporte e a confiança em múltiplas configurações de tuplas, aumentando a flexibilidade da análise.
-
-- **`calculateSupportAndConfidence()`**: Realiza o cálculo do suporte e da confiança para uma nova entrada. A função percorre todas as classes e suas combinações possíveis de tuplas, proporcionando uma análise abrangente das associações entre as tuplas e as classes.
-
-### Exemplo de Uso
-
-
-- Criação de um DataProcessor para processar o arquivo de entrada
+```c++
 DataProcessor dp("caminho/para/arquivo-de-entrada.data");
 dp.processFile();
-
-- Recuperação dos mapas de tuplas e classes processados
 const auto& tupleMap = dp.getTupleMap();
 const auto& classMap = dp.getClassMap();
+```
+Esta classe facilita a leitura e o processamento de dados estruturados, preparando-os para análises posteriores, como cálculo de similaridade e suporte/confiabilidade.
+## Explicação do Código leitura_input.cpp
+[![Leitura Input](https://img.shields.io/badge/Leitura%20Input-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/leitura_input.cpp)
 
-- Inicialização dos mapas de linhas para tuplas e classes
-map<pair<int, int>, vector<int>> tupleLines;
-map<int, vector<int>> classLines;
+[![Output: classMap](https://img.shields.io/badge/ClassMap-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/classMap.txt)
 
-- Preenchimento do mapa de linhas de tuplas a partir do tupleMap
-for (const auto& entry : tupleMap) {
-    tupleLines[{get<0>(entry.first), get<1>(entry.first)}] = entry.second;
-}
+[![Output: tupleMap](https://img.shields.io/badge/tupleMap-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/tupleMap.txt)
 
-- Preenchimento do mapa de linhas de classes a partir do classMap
-for (const auto& entry : classMap) {
-    classLines[entry.first] = entry.second;
-}
+### Descrição Geral
+O código `leitura_input.cpp` é responsável por ler um arquivo de dados e gerar dois arquivos de saída contendo mapeamentos de tuplas e classes, otimizados para análises posteriores.
 
-- Definição de uma nova instância para a qual o suporte e confiança serão calculados
-vector<pair<int, int>> newInstance = {{1, 10}, {1, 11}, {1, 13}, {1, 12}, {1, 1}};
+### Componentes e Funções
+* **Estrutura `TupleHash`:**
+  * Define uma função de hash personalizada para tuplas de inteiros.
+  * Garante um hash único para cada tupla, otimizando a busca em `unordered_map`.
+* **Classe `DataProcessor`:**
+  * **Construtor:** Inicializa a classe com o nome do arquivo de entrada.
+  * **`processFile()`:** Lê o arquivo linha por linha, processa cada linha e escreve os resultados em arquivos de saída.
+  * **`getTupleMap()` e `getClassMap()`:** Retornam os mapas `tupleMap` e `classMap`, respectivamente.
+  * **`processLine()`:** Processa uma linha individual do arquivo, adicionando informações aos mapas.
+  * **`writeTupleMapToFile()` e `writeClassMapToFile()`:** Escrevem os mapas em arquivos de saída.
+* **`main()`:** Cria um objeto `DataProcessor` e chama `processFile()`.
 
-- Cálculo do suporte e confiança para a nova instância
-calculateSupportAndConfidence(newInstance, tupleLines, classLines);
+### Estruturas de Dados
+* **`tupleMap`:** Um `unordered_map` que associa tuplas de inteiros (atributos) a vetores de números de linha.
+* **`classMap`:** Um `unordered_map` que associa rótulos de classe a vetores de números de linha.
 
-# Análise de Complexidade dos Códigos
+### Exemplo de Uso
+```c++
+DataProcessor dp("caminho/para/arquivo-de-entrada.data");
+dp.processFile();
+const auto& tupleMap = dp.getTupleMap();
+const auto& classMap = dp.getClassMap();
+```
+## Observações
 
-## 1. similaridade_jaccard.cpp
+* **Otimização:** O uso de `unordered_map` e da estrutura `TupleHash` otimiza a busca e inserção de dados.
+* **Flexibilidade:** A classe `DataProcessor` pode ser adaptada para diferentes formatos de arquivos e tipos de análise.
+* **Modularidade:** As funções da classe são bem definidas, facilitando a manutenção e o teste do código.
 
-### Função `process`
+Este código é fundamental para a preparação dos dados, transformando-os em um formato adequado para análises posteriores, como mineração de dados, aprendizado de máquina e análise estatística.
 
-- **Leitura e processamento do arquivo**: O(L * C)  
-  Onde L é o número de linhas e C é o número de colunas.
+## Sugestões para Melhorias
 
-- **Conversão de `unordered_map` para `map`**: O(T log T) para `tupleMap` e O(CL log CL) para `classMap`  
-  Onde T é o número de tuplas e CL é o número de classes.
+* **Tratamento de erros:** Implementar um tratamento de erros mais robusto, como verificação de tipos de dados e validação de entradas.
+* **Configuração:** Permitir a configuração de parâmetros como o delimitador de campos e o nome dos arquivos de saída.
+* **Documentação:** Adicionar comentários mais detalhados para explicar o propósito de cada função e variável.
+* **Testes unitários:** Escrever testes unitários para garantir a corretude do código.
 
-- **Cálculo de parâmetros**: O(1)
+Com essas melhorias, o código `leitura_input.cpp` se tornará ainda mais robusto e reutilizável.
+## Explicação do Código similaridade_jaccar.cpp
+[![Similaridade Jaccard](https://img.shields.io/badge/Similaridade%20Jaccard-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/similaridade_jaccard.cpp)
+[![Output: similaridade_cpp](https://img.shields.io/badge/View-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/similaridade_cpp.txt)
 
-- **Cálculo de similaridades**: O(T^2 * M)  
-  Onde T é o número de tuplas e M é o número médio de linhas por tupla.
+### Descrição Geral
+O código `similaridade_jaccar.cpp` calcula a similaridade de Jaccard entre conjuntos de valores associados a tuplas, lidos de um arquivo, e salva os resultados em um arquivo de saída.
 
-- **Escrita das similaridades em arquivo**: O(S)  
-  Onde S é o número de similaridades calculadas.
+### Componentes e Funções
+* **`loadTupleMap`:** Carrega o mapa de tuplas a partir de um arquivo, armazenando tuplas e seus conjuntos de valores associados.
+* **`calculateJaccard`:** Calcula a similaridade de Jaccard entre dois conjuntos.
+* **`calculateAllSimilarities`:** Calcula todas as similaridades de Jaccard entre as tuplas no mapa.
+* **`writeSimilaritiesToFile`:** Escreve as similaridades calculadas em um arquivo de saída.
+* **`main`:** Função principal que coordena o processo de carregamento, cálculo e escrita.
 
-### Função `jaccardSimilarity`
+### Estruturas de Dados
+* **`tupleMap`:** Armazena tuplas e seus conjuntos de valores.
+* **`similarities`:** Armazena pares de tuplas e suas similaridades de Jaccard.
 
-- **Interseção e união de conjuntos**: O(M + N)  
-  Onde M e N são os tamanhos dos dois conjuntos.
+### Exemplo de Uso
+```bash
+g++ similaridade_jaccar.cpp -o similaridade_jaccar
+./similaridade_jaccar
+```
+### Entrada e Saída
+* **Entrada:** Arquivo `tupleMap.txt` contendo tuplas e seus valores associados.
+* **Saída:** Arquivo `similaridade_cpp.txt` contendo as similaridades de Jaccard para cada par de tuplas.
 
-### Função `calculateSimilarities`
+### Observações
+* **Similaridade de Jaccard:** É uma medida de similaridade entre conjuntos, calculada como a razão entre a interseção e a união dos conjuntos.
+* **Aplicações:**
+  * **Análise de dados:** Identificar padrões e relacionamentos em conjuntos de dados.
+  * **Aprendizado de máquina:** Utilizada em técnicas de clustering e classificação.
 
-- **Iteração sobre combinações de tuplas**: O(T^2 * M)
+Este código fornece uma ferramenta útil para comparar a similaridade entre diferentes conjuntos de dados representados por tuplas.
 
-### Função `writeSimilaritiesToFile`
+### Sugestões para Melhorias
+* **Paralelização:** Explorar a paralelização do cálculo das similaridades para melhorar o desempenho em grandes conjuntos de dados.
+* **Otimizações:** Analisar e otimizar o algoritmo de cálculo da similaridade de Jaccard para conjuntos grandes.
+* **Flexibilidade:** Permitir a configuração de diferentes medidas de similaridade além da de Jaccard (e.g., coeficiente de Dice, distância de cosine).
 
-- **Escrita em arquivo**: O(S)  
-  Onde S é o número de similaridades calculadas.
+Com estas melhorias, o código pode ser aplicado a uma variedade de problemas e escalar para conjuntos de dados ainda maiores.
 
-## 2. leitura_input.cpp
+## Explicação do Código calculo_suporte_confianca.cpp
+[![Suporte e Confiança](https://img.shields.io/badge/Suporte%20e%20Confiança-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/calculo_suporte_confianca.cpp)
+[![Output: Support and Confidence (C++)](https://img.shields.io/badge/View-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/support_confidence_cpp.txt)
 
-### Função `processFile`
+### Descrição Geral
+O código `calculo_suporte_confianca.cpp` calcula o suporte e a confiança para uma nova entrada de dados, utilizando informações de tuplas e classes previamente carregadas. Os resultados são salvos em um arquivo de saída.
 
-- **Leitura do arquivo**: O(L * C)  
-  Onde L é o número de linhas e C é o número de colunas.
+### Componentes e Funções
+* **`calculateSupport` e `calculateConfidence`:** Calculam o suporte e a confiança, respectivamente, com base na interseção entre conjuntos de linhas.
+* **`generateCombinations`:** Gera todas as combinações possíveis de um determinado tamanho a partir de um vetor de elementos.
+* **`calculateSupportAndConfidence`:** Calcula o suporte e a confiança para todas as combinações possíveis de tuplas em uma nova entrada e salva os resultados.
+* **`main`:** Função principal que coordena o processo de cálculo e escrita.
 
-- **Processamento de cada linha**: O(L * C)
+### Estruturas de Dados
+* **`tupleLines`:** Mapeia tuplas para os números de linhas correspondentes.
+* **`classLines`:** Mapeia rótulos de classe para os números de linhas correspondentes.
 
-- **Escrita dos mapas em arquivos**: O(T + CL)  
-  Onde T é o número de tuplas e CL é o número de classes.
+### Exemplo de Uso
+```bash
+g++ calculo_suporte_confianca.cpp -o calculo_suporte_confianca
+./calculo_suporte_confianca
+```
+### Entrada e Saída
+* **Entrada:** `poker-hand-testing.data` (pode variar) - Contém dados de tuplas e classes.
+* **Saída:** `support_confidence_cpp.txt` - Contém os resultados de suporte e confiança.
 
-### Função `processLine`
+### Observações
+* **Suporte e Confiança:** São medidas utilizadas em mineração de dados para avaliar a frequência e a força de associações entre itens.
+* **Aplicações:**
+  * **Análise de dados de transações:** Identificar padrões de compra, como "clientes que compram pão também compram leite".
+  * **Análise de dados de poker:** Analisar a relação entre diferentes mãos de poker e suas probabilidades de vitória.
 
-- **Processamento de cada linha**: O(C)  
-  Onde C é o número de colunas.
+Este código é útil para a análise de dados e a descoberta de regras de associação em diversos contextos.
 
-### Função `writeTupleMapToFile`
+### Sugestões para Melhorias
+* **Otimizações:** 
+  * Explorar algoritmos mais eficientes para gerar combinações e calcular suporte e confiança, especialmente para grandes conjuntos de dados.
+  * Considerar o uso de estruturas de dados mais adequadas para os cálculos.
+* **Flexibilidade:**
+  * Permitir a configuração de diferentes medidas de suporte e confiança (e.g., lift, confiança condicional).
+  * Adaptar o código para trabalhar com diferentes formatos de entrada.
+* **Visualização:**
+  * Implementar uma interface para visualizar os resultados de forma gráfica (e.g., utilizando bibliotecas como Matplotlib ou Plotly).
 
-- **Escrita em arquivo**: O(T * M)  
-  Onde T é o número de tuplas e M é o número médio de linhas por tupla.
+Com estas melhorias, o código pode ser aplicado a uma variedade de problemas de mineração de dados e se tornar uma ferramenta mais poderosa e versátil.
+### Função `runProgram`
 
-### Função `writeClassMapToFile`
+A função `runProgram` é responsável por executar um programa externo a partir do código C++. Ela leva o nome do programa (sem extensão) como argumento e verifica o sistema operacional para executar o programa de forma adequada.
 
-- **Escrita em arquivo**: O(CL * L)  
-  Onde CL é o número de classes e L é o número médio de linhas por classe.
-
-## 3. calculo_suporte_confianca.cpp
-
-### Função `calculateSupport`
-
-- **Interseção de conjuntos**: O(M + N)  
-  Onde M e N são os tamanhos dos dois conjuntos.
-
-### Função `calculateConfidence`
-
-- **Interseção de conjuntos**: O(M + N)
-
-### Função `generateCombinations`
-
-- **Geração de combinações**: O(2^N)  
-  Onde N é o número de elementos no vetor `elements`.
-
-### Função `calculateSupportAndConfidence`
-
-- **Iteração sobre classes**: O(CL)  
-  Onde CL é o número de classes.
-
-- **Iteração sobre tamanhos de combinação**: O(2^N)  
-  Onde N é o tamanho da nova entrada.
-
-- **Iteração sobre combinações**: O(2^N)
-
-- **Interseção de conjuntos**: O(M + N) para cada combinação.
+* **`#ifdef _WIN32`:** Bloco condicional que verifica se o código está sendo compilado no Windows.
+    * Utiliza a API do Windows (`CreateProcessA`, `WaitForSingleObject`, etc.) para criar e esperar por um processo filho que executará o programa desejado.
+    * Adiciona a extensão `.exe` ao nome do programa antes da execução.
+    * Verifica o código de saída do programa para detectar erros.
+* **`#else`:** Bloco condicional executado em sistemas operacional diferentes do Windows (presumivelmente Linux).
+    * Utiliza a função `fork` para criar um processo filho.
+    * No processo filho, utiliza `execl` para substituir o processo atual pelo programa externo.
+    * No processo pai, utiliza `waitpid` para esperar o processo filho terminar e verifica o código de saída para detectar erros.
 
 ### Função `main`
+[![main](https://img.shields.io/badge/main-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/main.cpp)
+A função `main` é o ponto de entrada do programa.
 
-- **Processamento do arquivo**: O(L * C)
+1. **Inicialização:**
+    * Exibe uma mensagem indicando o início da execução dos programas.
+2. **Execução de programas:**
+    * Utiliza a função `runProgram` para executar sequencialmente três programas externos: "leitura_input", "similaridade_jaccard" e "calculo_suporte_confianca".
+3. **Finalização:**
+    * Exibe uma mensagem indicando que todos os programas foram executados com sucesso.
 
-- **Conversão de `unordered_map` para `map`**: O(T log T) para `tupleMap` e O(CL log CL) para `classMap`.
+**Melhorias:**
+* A função `runProgram` poderia ser aprimorada para receber o caminho completo do programa externo como argumento, tornando-a mais flexível.
+* O código poderia ser refatorado para evitar a duplicação das chamadas a `runProgram`.
+## Conclusão Final: Trabalho de Algoritmo de Classificação
+Michel Pires, Centro Federal de Educação Tecnológica de Minas Gerais
 
-- **Cálculo de suporte e confiança**: O(CL * 2^N * (M + N))
+Data: 16 de Julho de 2024
 
-## Resumo das Complexidades
+### 1. Resumo do Trabalho
+Neste trabalho, desenvolvemos e avaliamos um algoritmo de classificação baseado no Lazy Associative Classification (LAC). O LAC utiliza uma abordagem "preguiçosa" para a classificação, gerando a base de dados necessária para as previsões apenas durante o processo de classificação. Utilizamos listas, pilhas, filas e tabelas hash para implementar este algoritmo, com o objetivo de classificar novas entradas com base em dados de treinamento fornecidos.
+
+### 2. Implementação e Resultados
+```bash
+Suporte e Confianca para a nova entrada:
+Classe: 0, Suporte: 2.18826e-006, Confianca: 0.0141743
+Classe: 1, Suporte: 1.29796e-006, Confianca: 0.00318528
+Classe: 2, Suporte: 1.15154e-005, Confianca: 0.00140936
+Classe: 3, Suporte: 4.42916e-005, Confianca: 0.0118166
+Classe: 4, Suporte: 0.000298916, Confianca: 0.0142775
+Classe: 5, Suporte: 0.000468679, Confianca: 0.0117975
+Classe: 6, Suporte: 0.000158572, Confianca: 0.000675892
+Classe: 7, Suporte: 0.00532959, Confianca: 0.0142862
+Classe: 8, Suporte: 0.0456989, Confianca: 0.00140936
+Classe: 9, Suporte: 0.107527, Confianca: 0.000733471
+```
+
+O algoritmo foi implementado em C++ e validado em um ambiente Linux. A análise dos resultados gerados revelou:
+
+* **Suporte e Confiança:**
+    * A Classe 9 apresentou o maior suporte, mas a menor confiança, indicando que é a classe mais frequente, mas com menor precisão nas previsões.
+    * A Classe 8 apresentou um bom equilíbrio entre suporte e confiança.
+    * Classes com baixo suporte tiveram menor confiança, indicando desafios na previsão.
+* **Processamento de Dados:**
+    * O algoritmo processou as entradas uma a uma, calculando suporte e confiança para cada combinação de características.
+    * O resultado final foi uma lista classificada de entradas com a classe atribuída.
+
+### 3. Considerações sobre a Documentação e Entrega
+O trabalho foi documentado de acordo com os requisitos estabelecidos, incluindo:
+* Descrição detalhada das fases do projeto.
+* Análise de complexidade dos algoritmos.
+* Instruções de execução no arquivo README.md.
+### 4. Resumo das Complexidades
 
 - **similaridade_jaccard.cpp**: O(L * C + T log T + CL log CL + T^2 * M + S)
 - **leitura_input.cpp**: O(L * C + T * M + C * L)
 - **calculo_suporte_confianca.cpp**: O(L * C + T log T + CL log CL + CL * 2^N * (M + N))
+### 5. Conclusão
+O algoritmo LAC mostrou-se eficiente para classificação com base em regras de associação. Apesar de algumas limitações, o trabalho cumpriu os objetivos estabelecidos.
+
+### 6. Contribuidores
+
+Feito Por : 
+
+[![Arthur Mendonça](https://img.shields.io/badge/Arthur%20Mendonça-GitHub-black?style=flat&logo=github)](https://github.com/ImArthz)
+
+[![Thiago](https://img.shields.io/badge/Thiago-GitHub-black?style=flat&logo=github)](https://github.com/Thiago-Mi)
+
+[![Arthur Santana](https://img.shields.io/badge/Arthur%20Santana-GitHub-black?style=flat&logo=github)](https://github.com/Rutrama)

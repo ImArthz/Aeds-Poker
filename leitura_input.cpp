@@ -9,7 +9,7 @@
 #include <iterator>
 #include <set>
 #include <execution>
-#include <mutex>
+
 
 // Estrutura personalizada de hash para std::tuple<int, int>
 struct TupleHash {
@@ -55,7 +55,6 @@ private:
     std::string filename;
     std::unordered_map<std::tuple<int, int>, std::vector<int>, TupleHash> tupleMap;
     std::unordered_map<int, std::vector<int>> classMap;
-    std::mutex mtx;
 
     void processLine(const std::string& line, int lineNumber) {
         std::istringstream iss(line);

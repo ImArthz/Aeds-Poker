@@ -9,6 +9,8 @@
 #include <sys/stat.h>
 #include <direct.h> // Inclua para _mkdir
 #include <chrono> // Inclua para medir o tempo
+#include <thread> // Inclua para usar threads
+#include <mutex> // Inclua para usar mutex
 #include "DataProcessor.h"
 
 using namespace std;
@@ -57,7 +59,7 @@ vector<vector<T>> generateCombinations(const vector<T>& elements, int combinatio
 void calculateSupportAndConfidence(const vector<tuple<int, int>>& instance, 
                                    const map<tuple<int, int>, vector<int>>& tupleLines, 
                                    const map<int, vector<int>>& classLines,
-                                   ofstream& file, int lineNumber) {
+                                   ofstream& file, int lineNumber, mutex& fileMutex) {
     map<int, double> classSupport;
     map<int, double> classConfidence;
 
@@ -106,6 +108,7 @@ void calculateSupportAndConfidence(const vector<tuple<int, int>>& instance,
     }
     int count = 0;
     // Gravar suporte e confiança em um arquivo
+    lock_guard<mutex> guard(fileMutex); // Bloqueia o mutex para acesso ao arquivo
     for (const auto& entry : classSupport) {
         file << "classe " << count << ", linha " << lineNumber << ", suporte " << entry.second 
              << ", confiança " << classConfidence[entry.first] << endl;
@@ -155,7 +158,6 @@ int main() {
 
         cout << "Arquivo de treino processados com sucesso!" << endl;
 
-        
         DataProcessor dptesting("D:/Documentos/cefet/AEDS/Aeds-Poker/Arquivos/poker-hand-testing.data");
         dptesting.processFile(); // Processa o arquivo e preenche os mapas de tuplas e classes
         const auto& tupleVector = dptesting.getTupleVector(); // Obtém o vetor de tuplas
@@ -163,10 +165,33 @@ int main() {
         // Medir o tempo de execução do loop
         auto start = high_resolution_clock::now();
 
+        // Número de threads a serem usadas
+        const int numThreads = thread::hardware_concurrency();
+        vector<thread> threads;
+        mutex fileMutex;
+        mutex lineNumberMutex;
         int lineNumber = 1;
-        for (const auto& instance : tupleVector) {
-            calculateSupportAndConfidence(instance, tupleLines, classLines, file, lineNumber);
-            ++lineNumber;
+
+        // Dividir o trabalho entre as threads
+        int chunkSize = tupleVector.size() / numThreads;
+        for (int i = 0; i < numThreads; ++i) {
+            int startIdx = i * chunkSize;
+            int endIdx = (i == numThreads - 1) ? tupleVector.size() : (i + 1) * chunkSize;
+            threads.emplace_back([&, startIdx, endIdx]() {
+                for (int j = startIdx; j < endIdx; ++j) {
+                    int currentLineNumber;
+                    {
+                        lock_guard<mutex> guard(lineNumberMutex);
+                        currentLineNumber = lineNumber++;
+                    }
+                    calculateSupportAndConfidence(tupleVector[j], tupleLines, classLines, file, currentLineNumber, fileMutex);
+                }
+            });
+        }
+
+        // Esperar todas as threads terminarem
+        for (auto& t : threads) {
+            t.join();
         }
 
         auto end = high_resolution_clock::now();
@@ -175,7 +200,7 @@ int main() {
         file.close();
         cout << "--------------------------------------------" << endl;
         cout << "Calculo concluido com sucesso! Resultados gravados em: " << output_filename << endl;
-        cout << "Tempo de execução: " << duration.count() << " segundos" << endl;
+        cout << "Tempo de execucao: " << duration.count() << " segundos" << endl;
         cout << "--------------------------------------------" << endl;
     } catch (const exception& e) {
         cerr << "Erro: " << e.what() << endl;

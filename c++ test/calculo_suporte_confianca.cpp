@@ -8,9 +8,11 @@
 #include <stdexcept>
 #include <sys/stat.h>
 #include <direct.h> // Inclua para _mkdir
+#include <chrono> // Inclua para medir o tempo
 #include "DataProcessor.h"
 
 using namespace std;
+using namespace std::chrono;
 
 // Função para calcular o suporte
 double calculateSupport(const vector<int>& tupleLines, const vector<int>& classLines) {
@@ -22,6 +24,9 @@ double calculateSupport(const vector<int>& tupleLines, const vector<int>& classL
 
 // Função para calcular a confiança
 double calculateConfidence(const vector<int>& tupleLines, const vector<int>& classLines) {
+    if (tupleLines.empty()) {
+        return 0.0; // Evitar divisão por zero
+    }
     set<int> intersection;
     set_intersection(tupleLines.begin(), tupleLines.end(), classLines.begin(), classLines.end(),
                      inserter(intersection, intersection.begin()));
@@ -49,10 +54,10 @@ vector<vector<T>> generateCombinations(const vector<T>& elements, int combinatio
 }
 
 // Função para calcular suporte e confiança para uma nova entrada
-void calculateSupportAndConfidence(const vector<pair<int, int>>& instance, 
-                                   const map<pair<int, int>, vector<int>>& tupleLines, 
+void calculateSupportAndConfidence(const vector<tuple<int, int>>& instance, 
+                                   const map<tuple<int, int>, vector<int>>& tupleLines, 
                                    const map<int, vector<int>>& classLines,
-                                   const string& output_filename) {
+                                   ofstream& file, int lineNumber) {
     map<int, double> classSupport;
     map<int, double> classConfidence;
 
@@ -99,39 +104,32 @@ void calculateSupportAndConfidence(const vector<pair<int, int>>& instance,
             classConfidence[classLabel] = totalConfidence / count;
         }
     }
-
+    int count = 0;
     // Gravar suporte e confiança em um arquivo
-    ofstream file(output_filename);
-    if (!file.is_open()) {
-        throw runtime_error("Erro ao abrir o arquivo '" + output_filename + "' para escrita.");
-    }
-
-    file << "Suporte e Confianca para a nova entrada:" << endl;
     for (const auto& entry : classSupport) {
-        file << "Classe: " << entry.first << ", Suporte: " << entry.second 
-             << ", Confianca: " << classConfidence[entry.first] << endl;
+        file << "classe " << count << ", linha " << lineNumber << ", suporte " << entry.second 
+             << ", confiança " << classConfidence[entry.first] << endl;
+        ++count;
     }
-
-    file.close();
 }
 
 int main() {
     // Mensagens de status
     cout << "--------------------------------------------" << endl;
-    cout << "Calculo de suporte e confianca para uma nova entrada" << endl;
+    cout << "Calculo de suporte e confianca para o arquivo testing.data" << endl;
     cout << "--------------------------------------------" << endl;
     cout << "Processando arquivo de dados..." << endl;
     cout << "--------------------------------------------" << endl;
 
-
     try {
         // Substitua o caminho do arquivo pelo caminho correto
-        DataProcessor dp("C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/Arquivos/poker-hand-testing.data");
-        dp.processFile(); // Processa o arquivo e preenche os mapas de tuplas e classes
-        const auto& tupleMap = dp.getTupleMap(); // Obtém o mapa de tuplas
-        const auto& classMap = dp.getClassMap(); // Obtém o mapa de classes
+        DataProcessor dptraining("D:/Documentos/cefet/AEDS/Aeds-Poker/Arquivos/poker-hand-training.data");
+        dptraining.processFile(); // Processa o arquivo e preenche os mapas de tuplas e classes
 
-        map<pair<int, int>, vector<int>> tupleLines;
+        const auto& tupleMap = dptraining.getTupleMap(); // Obtém o mapa de tuplas
+        const auto& classMap = dptraining.getClassMap(); // Obtém o mapa de classes
+
+        map<tuple<int, int>, vector<int>> tupleLines;
         map<int, vector<int>> classLines;
 
         for (const auto& entry : tupleMap) {
@@ -142,21 +140,42 @@ int main() {
             classLines[entry.first] = entry.second;
         }
 
-        vector<pair<int, int>> newInstance = {{1, 10}, {1, 11}, {1, 13}, {1, 12}, {1, 1}};
-
         // Verifica se o diretório de saída existe e cria se necessário
-        string output_dir = "C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/c++ test/output";
+        string output_dir = "D:/Documentos/cefet/AEDS/Aeds-Poker/c++ test/output";
         if (_mkdir(output_dir.c_str()) != 0 && errno != EEXIST) { // Cria diretório no Windows
             cerr << "Erro ao criar o diretório '" << output_dir << "'." << endl;
             return 1;
         }
 
-        string output_filename = "/support_confidence_cpp.txt";
-        string output_path = output_dir;
-        calculateSupportAndConfidence(newInstance, tupleLines, classLines, output_filename);
+        string output_filename = output_dir + "/support_confidence_cpp.txt";
+        ofstream file(output_filename);
+        if (!file.is_open()) {
+            throw runtime_error("Erro ao abrir o arquivo '" + output_filename + "' para escrita.");
+        }
+
+        cout << "Arquivo de treino processados com sucesso!" << endl;
+
+        
+        DataProcessor dptesting("D:/Documentos/cefet/AEDS/Aeds-Poker/Arquivos/poker-hand-testing.data");
+        dptesting.processFile(); // Processa o arquivo e preenche os mapas de tuplas e classes
+        const auto& tupleVector = dptesting.getTupleVector(); // Obtém o vetor de tuplas
+
+        // Medir o tempo de execução do loop
+        auto start = high_resolution_clock::now();
+
+        int lineNumber = 1;
+        for (const auto& instance : tupleVector) {
+            calculateSupportAndConfidence(instance, tupleLines, classLines, file, lineNumber);
+            ++lineNumber;
+        }
+
+        auto end = high_resolution_clock::now();
+        auto duration = duration_cast<seconds>(end - start);
+
+        file.close();
         cout << "--------------------------------------------" << endl;
         cout << "Calculo concluido com sucesso! Resultados gravados em: " << output_filename << endl;
-        //cout << " Path do arquivo : "<< output_path+output_filename << endl; 
+        cout << "Tempo de execução: " << duration.count() << " segundos" << endl;
         cout << "--------------------------------------------" << endl;
     } catch (const exception& e) {
         cerr << "Erro: " << e.what() << endl;

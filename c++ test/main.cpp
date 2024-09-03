@@ -70,7 +70,7 @@ int main() {
     std::cout << "\t\t\t\tIniciando a execucao dos programas..." << std::endl;
     
     runProgram("leitura_input");       // Nome do programa sem extensão
-    runProgram("similaridade_jaccard"); // Nome do programa sem extensão
+    // runProgram("similaridade_jaccard"); // Nome do programa sem extensão
     runProgram("calculo_suporte_confianca"); // Nome do programa sem extensão
 
     std::cout << "\t\t\t=================================================" << std::endl;

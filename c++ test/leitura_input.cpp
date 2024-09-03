@@ -37,7 +37,6 @@ public:
                 processLine(line, lineNumber);
             }
             file.close();
-            
             writeTupleMapToFile("tupleMap.txt");
             writeClassMapToFile("classMap.txt");
 
@@ -55,26 +54,35 @@ public:
         return classMap;
     }
 
+    const std::vector<std::vector<std::pair<int, int>>>& getTupleVector() const {
+        return tupleVector;
+    }
+
 private:
     std::string filename;
     std::unordered_map<std::tuple<int, int>, std::vector<int>, TupleHash> tupleMap;
     std::unordered_map<int, std::vector<int>> classMap;
+    std::vector<std::vector<std::pair<int, int>>> tupleVector;
 
     void processLine(const std::string& line, int lineNumber) {
         std::istringstream iss(line);
         std::string value;
         int position = 1;
+        std::vector<std::pair<int, int>> currentLineTuples;
 
         while (std::getline(iss, value, ',')) {
             int num = std::stoi(value);
             if (position < 11) {
                 std::tuple<int, int> tuple = std::make_tuple(position, num);
                 tupleMap[tuple].push_back(lineNumber);
+                currentLineTuples.push_back(tuple);
             } else {
                 classMap[num].push_back(lineNumber);
             }
             position++;
         }
+
+        tupleVector.push_back(currentLineTuples);
     }
 
     void writeTupleMapToFile(const std::string& outputFilename) {
@@ -117,10 +125,21 @@ int main() {
     std::cout << "Iniciando o processamento do arquivo..." << std::endl;
     std::cout << "-------------------------------------------------" << std::endl;
 
-    DataProcessor dp("C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/Arquivos/poker-hand-training.data");
+    DataProcessor dp("D:/Documentos/cefet/AEDS/Aeds-Poker/Arquivos/poker-hand-training.data");
     dp.processFile();
     std::cout << "-------------------------------------------------" << std::endl;
     std::cout << "Processamento concluido." << std::endl;
     std::cout << "-------------------------------------------------" << std::endl;
+
+    // Exemplo de como acessar o tupleVector
+    // const auto& tupleVector = dp.getTupleVector();
+    // for (size_t i = 0; i < tupleVector.size(); ++i) {
+    //     std::cout << "Linha " << i + 1 << ": ";
+    //     for (const auto& tuple : tupleVector[i]) {
+    //         std::cout << "{" << std::get<0>(tuple) << ", " << std::get<1>(tuple) << "} ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+
     return 0;
 }

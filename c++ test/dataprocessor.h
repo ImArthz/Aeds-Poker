@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#pragma once
 #include <tuple>
 
 using namespace std;

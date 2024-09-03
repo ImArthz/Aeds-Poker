@@ -12,21 +12,28 @@
 
 using namespace std;
 
-// Função para calcular o suporte
 double calculateSupport(const vector<int>& tupleLines, const vector<int>& classLines) {
     set<int> intersection;
     set_intersection(tupleLines.begin(), tupleLines.end(), classLines.begin(), classLines.end(),
                      inserter(intersection, intersection.begin()));
+
+    cout << "Tamanho da interseção (Suporte): " << intersection.size() << endl;
+    cout << "Tamanho da classe: " << classLines.size() << endl;
+
     return static_cast<double>(intersection.size()) / classLines.size();
 }
 
-// Função para calcular a confiança
 double calculateConfidence(const vector<int>& tupleLines, const vector<int>& classLines) {
     set<int> intersection;
     set_intersection(tupleLines.begin(), tupleLines.end(), classLines.begin(), classLines.end(),
                      inserter(intersection, intersection.begin()));
+
+    cout << "Tamanho da interseção (Confiança): " << intersection.size() << endl;
+    cout << "Tamanho da tupla: " << tupleLines.size() << endl;
+
     return static_cast<double>(intersection.size()) / tupleLines.size();
 }
+
 
 // Função para gerar combinações de tamanho específico a partir de um vetor de elementos
 template <typename T>
@@ -125,7 +132,7 @@ int main() {
 
     try {
         // Substitua o caminho do arquivo pelo caminho correto
-        DataProcessor dp("C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/Arquivos/poker-hand-testing.data");
+        DataProcessor dp("C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/Arquivos/poker-hand-training.data");
         dp.processFile(); // Processa o arquivo e preenche os mapas de tuplas e classes
         const auto& tupleMap = dp.getTupleMap(); // Obtém o mapa de tuplas
         const auto& classMap = dp.getClassMap(); // Obtém o mapa de classes

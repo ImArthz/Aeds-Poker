@@ -8,21 +8,29 @@ O LAC é uma abordagem preguiçosa para classificação que difere dos métodos 
 ### Teste em python
 
 ## Código 1: Cálculo de Similaridades de Jaccard
+
 [![Jaccard (Python)](https://img.shields.io/badge/Jaccard%20(Python)-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/jaccard%20python.py)
+
 * **load_tuplemap(filename):** Carrega um mapa de tuplas de um arquivo.
 * **calculate_jaccard(set1, set2):** Calcula o índice de similaridade de Jaccard.
 * **calculate_all_similarities(tuple_map):** Calcula todas as similaridades de Jaccard.
 * **write_similarities_to_file(similarities, output_filename):** Escreve as similaridades em um arquivo.
-[![Output: Jaccard (Python)](https://img.shields.io/badge/View-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/output_python_test/similaridadePython.txt)
+  
+[![Output: Jaccard (Python)](https://img.shields.io/badge/Output%20Jaccard-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/output_python_test/similaridadePython.txt)
+
 ## Código 2: Comparação de Similaridades entre Python e C++
-[![Comparação de Similaridade (python)(c++)](https://img.shields.io/badge/View-Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/Similarity%20comparation.py)
+[![Comparação de Similaridade (python)(c++)](https://img.shields.io/badge/Comparacao%20Python%20vs%20c++-Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/Similarity%20comparation.py)
+
 * **load_similarities_from_file(filename):** Carrega as similaridades de um arquivo.
 * **compare_similarities(similarities_python, similarities_cpp, precision=6):** Compara as similaridades.
 * **write_comparison_results(discrepancies, iguais, diferentes, output_file):** Escreve os resultados da comparação.
-[![output (python vs c++)](https://img.shields.io/badge/View-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/output_python_test/discrepancias.txt)
+  
+[![output (python vs c++)](https://img.shields.io/badge/output%20python%20vs%20c++-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/output_python_test/discrepancias.txt)
 
 ## Código 3: Cálculo de Suporte e Confiança
+
 [![Suporte e Confiança (Python)](https://img.shields.io/badge/Suporte%20e%20Confiança%20(Python)-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/suport_confidence.py)
+
 * **load_tuple_map(filename):** Carrega o mapa de tuplas.
 * **load_class_map(filename):** Carrega o mapa de classes.
 * **calculate_support_and_confidence_for_class(args):** Calcula suporte e confiança para uma classe.
@@ -32,67 +40,9 @@ O LAC é uma abordagem preguiçosa para classificação que difere dos métodos 
 ## Nota Final
 O projeto principal está sendo desenvolvido em C++, e estes códigos Python são utilizados para testar as bases de dados e cálculos.
 ## Explicação do Código dataprocessor.h
-```bash
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <map>
-#include <tuple>
 
-using namespace std;
+[![Header: dataprocessor.h](https://img.shields.io/badge/Dataprocessor-Header-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/dataprocessor.h)
 
-// Classe para processar o arquivo de dados
-class DataProcessor {
-public:
-    DataProcessor(const string& filename) : filename(filename) {}
-
-    void processFile() {
-        ifstream file(filename);
-        string line;
-
-        if (!file.is_open()) {
-            cerr << "Não foi possível abrir o arquivo!" << endl;
-            return;
-        }
-
-        // Leitura do arquivo linha por linha
-        while (getline(file, line)) {
-            istringstream iss(line);
-            vector<int> values;
-            string value;
-
-            // Leitura dos valores separados por vírgula
-            while (getline(iss, value, ',')) {
-                values.push_back(stoi(value));
-            }
-
-            if (values.size() >= 2) {
-                int classLabel = values.back(); // Último valor é a classe
-                values.pop_back(); // Remove a classe para deixar apenas os atributos
-                tupleMap[{values[0], values[1]}].push_back(classLabel); // Supondo que estamos usando 2 atributos
-                classMap[classLabel].push_back(values[0]); // Adiciona o atributo à classe
-            }
-        }
-
-        file.close();
-    }
-
-    const map<pair<int, int>, vector<int>>& getTupleMap() const {
-        return tupleMap;
-    }
-
-    const map<int, vector<int>>& getClassMap() const {
-        return classMap;
-    }
-
-private:
-    string filename;
-    map<pair<int, int>, vector<int>> tupleMap;
-    map<int, vector<int>> classMap;
-};
-
-```
 ### Descrição Geral
 A classe `DataProcessor` é responsável por processar um arquivo de dados contendo registros que são utilizados para a análise e classificação. O arquivo é lido linha por linha, e os dados são armazenados em estruturas apropriadas para processamento posterior.
 
@@ -121,6 +71,7 @@ const auto& classMap = dp.getClassMap();
 ```
 Esta classe facilita a leitura e o processamento de dados estruturados, preparando-os para análises posteriores, como cálculo de similaridade e suporte/confiabilidade.
 ## Explicação do Código leitura_input.cpp
+
 [![Leitura Input](https://img.shields.io/badge/Leitura%20Input-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/leitura_input.cpp)
 
 [![Output: classMap](https://img.shields.io/badge/ClassMap-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/classMap.txt)
@@ -170,8 +121,10 @@ Este código é fundamental para a preparação dos dados, transformando-os em u
 
 Com essas melhorias, o código `leitura_input.cpp` se tornará ainda mais robusto e reutilizável.
 ## Explicação do Código similaridade_jaccar.cpp
+
 [![Similaridade Jaccard](https://img.shields.io/badge/Similaridade%20Jaccard-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/similaridade_jaccard.cpp)
-[![Output: similaridade_cpp](https://img.shields.io/badge/View-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/similaridade_cpp.txt)
+
+[![Output: similaridade_cpp](https://img.shields.io/badge/output%20Jaccard-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/similaridade_cpp.txt)
 
 ### Descrição Geral
 O código `similaridade_jaccar.cpp` calcula a similaridade de Jaccard entre conjuntos de valores associados a tuplas, lidos de um arquivo, e salva os resultados em um arquivo de saída.
@@ -212,8 +165,10 @@ Este código fornece uma ferramenta útil para comparar a similaridade entre dif
 Com estas melhorias, o código pode ser aplicado a uma variedade de problemas e escalar para conjuntos de dados ainda maiores.
 
 ## Explicação do Código calculo_suporte_confianca.cpp
+
 [![Suporte e Confiança](https://img.shields.io/badge/Suporte%20e%20Confiança-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/calculo_suporte_confianca.cpp)
-[![Output: Support and Confidence (C++)](https://img.shields.io/badge/View-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/support_confidence_cpp.txt)
+
+[![Output: Support and Confidence (C++)](https://img.shields.io/badge/Output%20Suporte%20e%20Confianca-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/support_confidence_cpp.txt)
 
 ### Descrição Geral
 O código `calculo_suporte_confianca.cpp` calcula o suporte e a confiança para uma nova entrada de dados, utilizando informações de tuplas e classes previamente carregadas. Os resultados são salvos em um arquivo de saída.
@@ -270,7 +225,9 @@ A função `runProgram` é responsável por executar um programa externo a parti
     * No processo pai, utiliza `waitpid` para esperar o processo filho terminar e verifica o código de saída para detectar erros.
 
 ### Função `main`
+
 [![main](https://img.shields.io/badge/main-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/main.cpp)
+
 A função `main` é o ponto de entrada do programa.
 
 1. **Inicialização:**

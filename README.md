@@ -120,49 +120,7 @@ Este código é fundamental para a preparação dos dados, transformando-os em u
 * **Testes unitários:** Escrever testes unitários para garantir a corretude do código.
 
 Com essas melhorias, o código `leitura_input.cpp` se tornará ainda mais robusto e reutilizável.
-## Explicação do Código similaridade_jaccar.cpp
 
-[![Similaridade Jaccard](https://img.shields.io/badge/Similaridade%20Jaccard-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/similaridade_jaccard.cpp)
-
-[![Output: similaridade_cpp](https://img.shields.io/badge/output%20Jaccard-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/similaridade_cpp.txt)
-
-### Descrição Geral
-O código `similaridade_jaccar.cpp` calcula a similaridade de Jaccard entre conjuntos de valores associados a tuplas, lidos de um arquivo, e salva os resultados em um arquivo de saída.
-
-### Componentes e Funções
-* **`loadTupleMap`:** Carrega o mapa de tuplas a partir de um arquivo, armazenando tuplas e seus conjuntos de valores associados.
-* **`calculateJaccard`:** Calcula a similaridade de Jaccard entre dois conjuntos.
-* **`calculateAllSimilarities`:** Calcula todas as similaridades de Jaccard entre as tuplas no mapa.
-* **`writeSimilaritiesToFile`:** Escreve as similaridades calculadas em um arquivo de saída.
-* **`main`:** Função principal que coordena o processo de carregamento, cálculo e escrita.
-
-### Estruturas de Dados
-* **`tupleMap`:** Armazena tuplas e seus conjuntos de valores.
-* **`similarities`:** Armazena pares de tuplas e suas similaridades de Jaccard.
-
-### Exemplo de Uso
-```bash
-g++ similaridade_jaccar.cpp -o similaridade_jaccar
-./similaridade_jaccar
-```
-### Entrada e Saída
-* **Entrada:** Arquivo `tupleMap.txt` contendo tuplas e seus valores associados.
-* **Saída:** Arquivo `similaridade_cpp.txt` contendo as similaridades de Jaccard para cada par de tuplas.
-
-### Observações
-* **Similaridade de Jaccard:** É uma medida de similaridade entre conjuntos, calculada como a razão entre a interseção e a união dos conjuntos.
-* **Aplicações:**
-  * **Análise de dados:** Identificar padrões e relacionamentos em conjuntos de dados.
-  * **Aprendizado de máquina:** Utilizada em técnicas de clustering e classificação.
-
-Este código fornece uma ferramenta útil para comparar a similaridade entre diferentes conjuntos de dados representados por tuplas.
-
-### Sugestões para Melhorias
-* **Paralelização:** Explorar a paralelização do cálculo das similaridades para melhorar o desempenho em grandes conjuntos de dados.
-* **Otimizações:** Analisar e otimizar o algoritmo de cálculo da similaridade de Jaccard para conjuntos grandes.
-* **Flexibilidade:** Permitir a configuração de diferentes medidas de similaridade além da de Jaccard (e.g., coeficiente de Dice, distância de cosine).
-
-Com estas melhorias, o código pode ser aplicado a uma variedade de problemas e escalar para conjuntos de dados ainda maiores.
 
 ## Explicação do Código calculo_suporte_confianca.cpp
 
@@ -170,45 +128,57 @@ Com estas melhorias, o código pode ser aplicado a uma variedade de problemas e 
 
 [![Output: Support and Confidence (C++)](https://img.shields.io/badge/Output%20Suporte%20e%20Confianca-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/support_confidence_cpp.txt)
 
+
 ### Descrição Geral
-O código `calculo_suporte_confianca.cpp` calcula o suporte e a confiança para uma nova entrada de dados, utilizando informações de tuplas e classes previamente carregadas. Os resultados são salvos em um arquivo de saída.
+
+O código `calculo_suporte_confianca.cpp` calcula o suporte e a confiança para uma nova entrada de dados, utilizando informações de tuplas e classes previamente carregadas. Os resultados são salvos em um arquivo de saída. Este código é projetado para ser executado em ambientes Linux e utiliza paralelismo para melhorar o desempenho.
 
 ### Componentes e Funções
-* **`calculateSupport` e `calculateConfidence`:** Calculam o suporte e a confiança, respectivamente, com base na interseção entre conjuntos de linhas.
-* **`generateCombinations`:** Gera todas as combinações possíveis de um determinado tamanho a partir de um vetor de elementos.
-* **`calculateSupportAndConfidence`:** Calcula o suporte e a confiança para todas as combinações possíveis de tuplas em uma nova entrada e salva os resultados.
-* **`main`:** Função principal que coordena o processo de cálculo e escrita.
+
+* **calculateSupport:** Calcula o suporte com base na interseção entre conjuntos de linhas. O suporte é a proporção de linhas que contêm o conjunto de itens em relação ao total de linhas da classe.
+* **calculateConfidence:** Calcula a confiança, que é a proporção de linhas que contêm tanto o conjunto de itens quanto a classe em relação ao total de linhas que contêm o conjunto de itens.
+* **generateCombinations:** Gera todas as combinações possíveis de um determinado tamanho a partir de um vetor de elementos. Utiliza uma abordagem de combinação baseada em permutações.
+* **calculateSupportAndConfidence:** Calcula o suporte e a confiança para todas as combinações possíveis de tuplas em uma nova entrada e salva os resultados em um arquivo de saída.
+* **main:** Função principal que coordena o processo de cálculo e escrita. Ela processa os arquivos de entrada, cria diretórios se necessário, divide o trabalho entre várias threads para calcular suporte e confiança, e grava os resultados em um arquivo.
 
 ### Estruturas de Dados
-* **`tupleLines`:** Mapeia tuplas para os números de linhas correspondentes.
-* **`classLines`:** Mapeia rótulos de classe para os números de linhas correspondentes.
+
+* **tupleLines:** Mapeia tuplas para os números de linhas correspondentes.
+* **classLines:** Mapeia rótulos de classe para os números de linhas correspondentes.
 
 ### Exemplo de Uso
+
 ```bash
-g++ calculo_suporte_confianca.cpp -o calculo_suporte_confianca
+g++ calculo_suporte_confianca.cpp -o calculo_suporte_confianca -lpthread
 ./calculo_suporte_confianca
 ```
 ### Entrada e Saída
-* **Entrada:** `poker-hand-testing.data` (pode variar) - Contém dados de tuplas e classes.
-* **Saída:** `support_confidence_cpp.txt` - Contém os resultados de suporte e confiança.
+
+* **Entrada:**
+    * `poker-hand-training.data` e `poker-hand-testing.data` (caminhos podem variar) - Contêm dados de tuplas e classes.
+* **Saída:**
+    * `support_confidence_cpp.txt` - Contém os resultados de suporte e confiança.
 
 ### Observações
+
 * **Suporte e Confiança:** São medidas utilizadas em mineração de dados para avaliar a frequência e a força de associações entre itens.
 * **Aplicações:**
-  * **Análise de dados de transações:** Identificar padrões de compra, como "clientes que compram pão também compram leite".
-  * **Análise de dados de poker:** Analisar a relação entre diferentes mãos de poker e suas probabilidades de vitória.
+    * **Análise de dados de transações:** Identificar padrões de compra, como "clientes que compram pão também compram leite".
+    * **Análise de dados de poker:** Analisar a relação entre diferentes mãos de poker e suas probabilidades de vitória.
 
 Este código é útil para a análise de dados e a descoberta de regras de associação em diversos contextos.
 
 ### Sugestões para Melhorias
-* **Otimizações:** 
-  * Explorar algoritmos mais eficientes para gerar combinações e calcular suporte e confiança, especialmente para grandes conjuntos de dados.
-  * Considerar o uso de estruturas de dados mais adequadas para os cálculos.
+
+* **Otimizações:**
+    * Explorar algoritmos mais eficientes para gerar combinações e calcular suporte e confiança, especialmente para grandes conjuntos de dados.
+    * Considerar o uso de estruturas de dados mais adequadas para os cálculos.
+    * Utilizar como limite superior a similaridade de jaccard, entre os pares de tuplas, para o calculo de suporte e confiança, ao definir um valor como 55%, e só calcular o suporte/confiança quando o valor for igual ou maior. 
 * **Flexibilidade:**
-  * Permitir a configuração de diferentes medidas de suporte e confiança (e.g., lift, confiança condicional).
-  * Adaptar o código para trabalhar com diferentes formatos de entrada.
+    * Permitir a configuração de diferentes medidas de suporte e confiança (e.g., lift, confiança condicional).
+    * Adaptar o código para trabalhar com diferentes formatos de entrada.
 * **Visualização:**
-  * Implementar uma interface para visualizar os resultados de forma gráfica (e.g., utilizando bibliotecas como Matplotlib ou Plotly).
+    * Implementar uma interface para visualizar os resultados de forma gráfica (e.g., utilizando bibliotecas como Matplotlib ou Plotly).
 
 Com estas melhorias, o código pode ser aplicado a uma variedade de problemas de mineração de dados e se tornar uma ferramenta mais poderosa e versátil.
 ### Função `runProgram`
@@ -224,65 +194,92 @@ A função `runProgram` é responsável por executar um programa externo a parti
     * No processo filho, utiliza `execl` para substituir o processo atual pelo programa externo.
     * No processo pai, utiliza `waitpid` para esperar o processo filho terminar e verifica o código de saída para detectar erros.
 
-### Função `main`
-
-[![main](https://img.shields.io/badge/main-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/main.cpp)
-
-A função `main` é o ponto de entrada do programa.
-
-1. **Inicialização:**
-    * Exibe uma mensagem indicando o início da execução dos programas.
-2. **Execução de programas:**
-    * Utiliza a função `runProgram` para executar sequencialmente três programas externos: "leitura_input", "similaridade_jaccard" e "calculo_suporte_confianca".
-3. **Finalização:**
-    * Exibe uma mensagem indicando que todos os programas foram executados com sucesso.
-
-**Melhorias:**
-* A função `runProgram` poderia ser aprimorada para receber o caminho completo do programa externo como argumento, tornando-a mais flexível.
-* O código poderia ser refatorado para evitar a duplicação das chamadas a `runProgram`.
-## Conclusão Final: Trabalho de Algoritmo de Classificação
-Michel Pires, Centro Federal de Educação Tecnológica de Minas Gerais
-
-Data: 16 de Julho de 2024
 
 ### 1. Resumo do Trabalho
 Neste trabalho, desenvolvemos e avaliamos um algoritmo de classificação baseado no Lazy Associative Classification (LAC). O LAC utiliza uma abordagem "preguiçosa" para a classificação, gerando a base de dados necessária para as previsões apenas durante o processo de classificação. Utilizamos listas, pilhas, filas e tabelas hash para implementar este algoritmo, com o objetivo de classificar novas entradas com base em dados de treinamento fornecidos.
 
 ### 2. Implementação e Resultados
-```bash
-Suporte e Confianca para a nova entrada:
-Classe: 0, Suporte: 2.18826e-006, Confianca: 0.0141743
-Classe: 1, Suporte: 1.29796e-006, Confianca: 0.00318528
-Classe: 2, Suporte: 1.15154e-005, Confianca: 0.00140936
-Classe: 3, Suporte: 4.42916e-005, Confianca: 0.0118166
-Classe: 4, Suporte: 0.000298916, Confianca: 0.0142775
-Classe: 5, Suporte: 0.000468679, Confianca: 0.0117975
-Classe: 6, Suporte: 0.000158572, Confianca: 0.000675892
-Classe: 7, Suporte: 0.00532959, Confianca: 0.0142862
-Classe: 8, Suporte: 0.0456989, Confianca: 0.00140936
-Classe: 9, Suporte: 0.107527, Confianca: 0.000733471
-```
+![Output Suporte e Confiança](https://img.shields.io/badge/output%20Suporte%20e%20Confiança-Output-blue)]
 
 O algoritmo foi implementado em C++ e validado em um ambiente Linux. A análise dos resultados gerados revelou:
 
-* **Suporte e Confiança:**
-    * A Classe 9 apresentou o maior suporte, mas a menor confiança, indicando que é a classe mais frequente, mas com menor precisão nas previsões.
-    * A Classe 8 apresentou um bom equilíbrio entre suporte e confiança.
-    * Classes com baixo suporte tiveram menor confiança, indicando desafios na previsão.
-* **Processamento de Dados:**
-    * O algoritmo processou as entradas uma a uma, calculando suporte e confiança para cada combinação de características.
-    * O resultado final foi uma lista classificada de entradas com a classe atribuída.
+
+A análise dos resultados de suporte e confiança obtidos mostra variações significativas entre as diferentes linhas e classes de dados. De maneira geral, os valores de suporte e confiança são bastante variados, indicando que a presença de certas características pode influenciar de maneira diferente o suporte e a confiança dependendo da linha e da classe.
+
+Observa-se que a confiança tende a ser um pouco mais alta para a classe 1 em comparação com a classe 0 em várias linhas, o que pode sugerir uma tendência geral de que as características associadas à classe 1 são mais fortemente associadas às classes de interesse no conjunto de dados.
+
+Além disso, o suporte também apresenta variações, com algumas linhas mostrando um suporte relativamente alto para a classe 0, o que pode indicar que essas características específicas ocorrem com maior frequência nesse contexto.
+
+Esses resultados são úteis para entender as relações e padrões nos dados, e podem fornecer insights para futuras análises e decisões relacionadas ao problema em questão. No entanto, uma análise mais detalhada e a consideração de mais linhas de dados podem ser necessárias para obter conclusões mais robustas e para validar essas observações preliminares.
 
 ### 3. Considerações sobre a Documentação e Entrega
 O trabalho foi documentado de acordo com os requisitos estabelecidos, incluindo:
 * Descrição detalhada das fases do projeto.
 * Análise de complexidade dos algoritmos.
 * Instruções de execução no arquivo README.md.
-### 4. Resumo das Complexidades
+### 4. Análise de Complexidade das Funções 
 
-- **similaridade_jaccard.cpp**: O(L * C + T log T + CL log CL + T^2 * M + S)
-- **leitura_input.cpp**: O(L * C + T * M + C * L)
-- **calculo_suporte_confianca.cpp**: O(L * C + T log T + CL log CL + CL * 2^N * (M + N))
+## Análise de Complexidade das Funções de Suporte e Confiança
+
+1. **Função `calculateSupport`**
+   - **Complexidade:** O(n + m), onde `n` é o tamanho de `tupleLines` e `m` é o tamanho de `classLines`, devido ao uso da função `set_intersection`.
+
+2. **Função `calculateConfidence`**
+   - **Complexidade:** O(n + m), similar à `calculateSupport`.
+
+3. **Função `generateCombinations`**
+   - **Complexidade:** O(2^n), pois a função gera todas as combinações possíveis de um conjunto de elementos.
+
+4. **Função `calculateSupportAndConfidence`**
+   - **Complexidade:** O(C * n * 2^n * (n + m)), onde:
+     - `C` é o número de classes.
+     - `n` é o tamanho da `instance`.
+     - `m` é o tamanho de `classLines`.
+   - A complexidade é determinada pela combinação de loops e a geração de combinações.
+
+5. **Função `main`**
+   - **Complexidade:** O(N * C * n * 2^n * (n + m)), onde:
+     - `N` é o número de linhas no arquivo de teste.
+     - A função `calculateSupportAndConfidence` é chamada para cada linha do arquivo de teste.
+
+## Análise de Complexidade das Funções de Leitura de Inputs
+
+1. **Estrutura `TupleHash`**
+   - **Complexidade:** O(1), para a função de hash.
+
+2. **Classe `DataProcessor`**
+   - **Função `processFile`**
+     - **Complexidade:** O(L * P), onde `L` é o número de linhas e `P` é o número de elementos por linha.
+   - **Função `processLine`**
+     - **Complexidade:** O(P), devido à leitura e inserção dos elementos.
+   - **Função `writeTupleMapToFile`**
+     - **Complexidade:** O(T * L), onde `T` é o número de tuplas e `L` é o número de linhas associadas a cada tupla.
+   - **Função `writeClassMapToFile`**
+     - **Complexidade:** O(C * L), onde `C` é o número de classes.
+
+3. **Função `main`**
+   - **Complexidade:** O(L * P + T * L + C * L).
+
+### Análise de Complexidade das Funções de Jaccard
+
+1. **Função `loadTupleMap`**
+   - **Complexidade:** O(L * (V log V + log N)), onde:
+     - `L` é o número de linhas.
+     - `V` é o número de valores por linha.
+     - `N` é o número de chaves no mapa.
+
+2. **Função `calculateJaccard`**
+   - **Complexidade:** O(S1 log S1 + S2 log S2), onde `S1` e `S2` são os tamanhos dos conjuntos.
+
+3. **Função `calculateAllSimilarities`**
+   - **Complexidade:** O(N^2 * (S log S)), onde `N` é o número de chaves e `S` é o tamanho médio dos conjuntos.
+
+4. **Função `writeSimilaritiesToFile`**
+   - **Complexidade:** O(M), onde `M` é o número de similaridades.
+
+5. **Função `main`**
+   - **Complexidade:** Dominada por O(N^2 * (S log S)).
+
 ### 5. Conclusão
 O algoritmo LAC mostrou-se eficiente para classificação com base em regras de associação. Apesar de algumas limitações, o trabalho cumpriu os objetivos estabelecidos.
 

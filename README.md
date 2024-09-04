@@ -11,12 +11,14 @@ O LAC é uma abordagem preguiçosa para classificação que difere dos métodos 
 
 [![Jaccard (Python)](https://img.shields.io/badge/Jaccard%20(Python)-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/jaccard%20python.py)
 
+
 * **load_tuplemap(filename):** Carrega um mapa de tuplas de um arquivo.
 * **calculate_jaccard(set1, set2):** Calcula o índice de similaridade de Jaccard.
 * **calculate_all_similarities(tuple_map):** Calcula todas as similaridades de Jaccard.
 * **write_similarities_to_file(similarities, output_filename):** Escreve as similaridades em um arquivo.
   
 [![Output: Jaccard (Python)](https://img.shields.io/badge/Output%20Jaccard-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/output_python_test/similaridadePython.txt)
+
 
 ## Código 2: Comparação de Similaridades entre Python e C++
 [![Comparação de Similaridade (python)(c++)](https://img.shields.io/badge/Comparacao%20Python%20vs%20c++-Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/python%20test/Similarity%20comparation.py)
@@ -74,9 +76,9 @@ Esta classe facilita a leitura e o processamento de dados estruturados, preparan
 
 [![Leitura Input](https://img.shields.io/badge/Leitura%20Input-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/leitura_input.cpp)
 
-[![Output: classMap](https://img.shields.io/badge/ClassMap-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/classMap.txt)
+[![Output: classMap](https://img.shields.io/badge/ClassMap-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/classMap.txt)
 
-[![Output: tupleMap](https://img.shields.io/badge/tupleMap-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/tupleMap.txt)
+[![Output: tupleMap](https://img.shields.io/badge/tupleMap-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/tupleMap.txt)
 
 ### Descrição Geral
 O código `leitura_input.cpp` é responsável por ler um arquivo de dados e gerar dois arquivos de saída contendo mapeamentos de tuplas e classes, otimizados para análises posteriores.
@@ -199,7 +201,7 @@ A função `runProgram` é responsável por executar um programa externo a parti
 Neste trabalho, desenvolvemos e avaliamos um algoritmo de classificação baseado no Lazy Associative Classification (LAC). O LAC utiliza uma abordagem "preguiçosa" para a classificação, gerando a base de dados necessária para as previsões apenas durante o processo de classificação. Utilizamos listas, pilhas, filas e tabelas hash para implementar este algoritmo, com o objetivo de classificar novas entradas com base em dados de treinamento fornecidos.
 
 ### 2. Implementação e Resultados
-![Output Suporte e Confiança](https://img.shields.io/badge/output%20Suporte%20e%20Confiança-Output-blue)]
+[![Output: Support and Confidence (C++)](https://img.shields.io/badge/Output%20Suporte%20e%20Confianca-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/support_confidence_cpp.txt)
 
 O algoritmo foi implementado em C++ e validado em um ambiente Linux. A análise dos resultados gerados revelou:
 

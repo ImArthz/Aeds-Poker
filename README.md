@@ -120,49 +120,7 @@ Este código é fundamental para a preparação dos dados, transformando-os em u
 * **Testes unitários:** Escrever testes unitários para garantir a corretude do código.
 
 Com essas melhorias, o código `leitura_input.cpp` se tornará ainda mais robusto e reutilizável.
-## Explicação do Código similaridade_jaccar.cpp
 
-[![Similaridade Jaccard](https://img.shields.io/badge/Similaridade%20Jaccard-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/similaridade_jaccard.cpp)
-
-[![Output: similaridade_cpp](https://img.shields.io/badge/output%20Jaccard-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/similaridade_cpp.txt)
-
-### Descrição Geral
-O código `similaridade_jaccar.cpp` calcula a similaridade de Jaccard entre conjuntos de valores associados a tuplas, lidos de um arquivo, e salva os resultados em um arquivo de saída.
-
-### Componentes e Funções
-* **`loadTupleMap`:** Carrega o mapa de tuplas a partir de um arquivo, armazenando tuplas e seus conjuntos de valores associados.
-* **`calculateJaccard`:** Calcula a similaridade de Jaccard entre dois conjuntos.
-* **`calculateAllSimilarities`:** Calcula todas as similaridades de Jaccard entre as tuplas no mapa.
-* **`writeSimilaritiesToFile`:** Escreve as similaridades calculadas em um arquivo de saída.
-* **`main`:** Função principal que coordena o processo de carregamento, cálculo e escrita.
-
-### Estruturas de Dados
-* **`tupleMap`:** Armazena tuplas e seus conjuntos de valores.
-* **`similarities`:** Armazena pares de tuplas e suas similaridades de Jaccard.
-
-### Exemplo de Uso
-```bash
-g++ similaridade_jaccar.cpp -o similaridade_jaccar
-./similaridade_jaccar
-```
-### Entrada e Saída
-* **Entrada:** Arquivo `tupleMap.txt` contendo tuplas e seus valores associados.
-* **Saída:** Arquivo `similaridade_cpp.txt` contendo as similaridades de Jaccard para cada par de tuplas.
-
-### Observações
-* **Similaridade de Jaccard:** É uma medida de similaridade entre conjuntos, calculada como a razão entre a interseção e a união dos conjuntos.
-* **Aplicações:**
-  * **Análise de dados:** Identificar padrões e relacionamentos em conjuntos de dados.
-  * **Aprendizado de máquina:** Utilizada em técnicas de clustering e classificação.
-
-Este código fornece uma ferramenta útil para comparar a similaridade entre diferentes conjuntos de dados representados por tuplas.
-
-### Sugestões para Melhorias
-* **Paralelização:** Explorar a paralelização do cálculo das similaridades para melhorar o desempenho em grandes conjuntos de dados.
-* **Otimizações:** Analisar e otimizar o algoritmo de cálculo da similaridade de Jaccard para conjuntos grandes.
-* **Flexibilidade:** Permitir a configuração de diferentes medidas de similaridade além da de Jaccard (e.g., coeficiente de Dice, distância de cosine).
-
-Com estas melhorias, o código pode ser aplicado a uma variedade de problemas e escalar para conjuntos de dados ainda maiores.
 
 ## Explicação do Código calculo_suporte_confianca.cpp
 
@@ -236,23 +194,6 @@ A função `runProgram` é responsável por executar um programa externo a parti
     * No processo filho, utiliza `execl` para substituir o processo atual pelo programa externo.
     * No processo pai, utiliza `waitpid` para esperar o processo filho terminar e verifica o código de saída para detectar erros.
 
-### Função `main`
-
-[![main](https://img.shields.io/badge/main-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/main.cpp)
-
-A função `main` é o ponto de entrada do programa.
-
-1. **Inicialização:**
-    * Exibe uma mensagem indicando o início da execução dos programas.
-2. **Execução de programas:**
-    * Utiliza a função `runProgram` para executar sequencialmente três programas externos: "leitura_input", "similaridade_jaccard" e "calculo_suporte_confianca".
-3. **Finalização:**
-    * Exibe uma mensagem indicando que todos os programas foram executados com sucesso.
-
-**Melhorias:**
-* A função `runProgram` poderia ser aprimorada para receber o caminho completo do programa externo como argumento, tornando-a mais flexível.
-* O código poderia ser refatorado para evitar a duplicação das chamadas a `runProgram`.
-## Conclusão Final: Trabalho de Algoritmo de Classificação
 
 ### 1. Resumo do Trabalho
 Neste trabalho, desenvolvemos e avaliamos um algoritmo de classificação baseado no Lazy Associative Classification (LAC). O LAC utiliza uma abordagem "preguiçosa" para a classificação, gerando a base de dados necessária para as previsões apenas durante o processo de classificação. Utilizamos listas, pilhas, filas e tabelas hash para implementar este algoritmo, com o objetivo de classificar novas entradas com base em dados de treinamento fornecidos.

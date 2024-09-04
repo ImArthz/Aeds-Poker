@@ -118,8 +118,8 @@ void writeSimilaritiesToFile(const map<pair<pair<int, int>, pair<int, int>>, dou
 }
 
 int main() {
-    string inputFilename = "C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/c++ test/output/tupleMap.txt"; // Substitua pelo caminho correto do arquivo
-    string outputFilename = "C:/Users/Usuario/Desktop/Aeds-Poker-suporte_confianca/c++ test/output/similaridade_cpp.txt"; // Substitua pelo caminho desejado para a saída
+    string inputFilename = "./output/tupleMap.txt"; // Substitua pelo caminho correto do arquivo
+    string outputFilename = "./output/similaridade_cpp.txt"; // Substitua pelo caminho desejado para a saída
 
     try {
         // Carrega o mapa de tuplas

@@ -124,7 +124,7 @@ int main() {
 
     try {
         // Substitua o caminho do arquivo pelo caminho correto
-        DataProcessor dptraining("/home/aluno/Área de Trabalho/Aeds-Poker-main/Arquivos/poker-hand-training.data");
+        DataProcessor dptraining("../Arquivos/poker-hand-training.data");
         dptraining.processFile(); // Processa o arquivo e preenche os mapas de tuplas e classes
 
         const auto& tupleMap = dptraining.getTupleMap(); // Obtém o mapa de tuplas
@@ -142,7 +142,7 @@ int main() {
         }
 
         // Verifica se o diretório de saída existe e cria se necessário
-        string output_dir = "/home/aluno/Área de Trabalho/Aeds-Poker-main/c++ test/output";
+        string output_dir = "./output";
         if (mkdir(output_dir.c_str(), 0777) != 0 && errno != EEXIST) { // Cria diretório no Linux
             cerr << "Erro ao criar o diretório '" << output_dir << "'." << endl;
             return 1;
@@ -156,7 +156,7 @@ int main() {
 
         cout << "Arquivo de treino processados com sucesso!" << endl;
 
-        DataProcessor dptesting("/home/aluno/Área de Trabalho/Aeds-Poker-main/Arquivos/poker-hand-testing.data");
+        DataProcessor dptesting("../Arquivos/poker-hand-testing.data");
         dptesting.processFile(); // Processa o arquivo e preenche os mapas de tuplas e classes
         const auto& tupleVector = dptesting.getTupleVector(); // Obtém o vetor de tuplas
 

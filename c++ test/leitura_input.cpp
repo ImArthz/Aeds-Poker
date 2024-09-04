@@ -154,7 +154,7 @@ int main()
     std::cout << "Iniciando o processamento do arquivo..." << std::endl;
     std::cout << "-------------------------------------------------" << std::endl;
 
-    DataProcessor dp("/home/aluno/Área de Trabalho/Aeds-Poker-main/Arquivos/poker-hand-training.data");
+    DataProcessor dp("../Arquivos/poker-hand-training.data");
     dp.processFile();
     std::cout << "-------------------------------------------------" << std::endl;
     std::cout << "Processamento concluido." << std::endl;

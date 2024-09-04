@@ -171,7 +171,7 @@ Com estas melhorias, o código pode ser aplicado a uma variedade de problemas e 
 [![Output: Support and Confidence (C++)](https://img.shields.io/badge/Output%20Suporte%20e%20Confianca-Output-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/output/support_confidence_cpp.txt)
 
 
-## Descrição Geral
+### Descrição Geral
 
 O código `calculo_suporte_confianca.cpp` calcula o suporte e a confiança para uma nova entrada de dados, utilizando informações de tuplas e classes previamente carregadas. Os resultados são salvos em um arquivo de saída. Este código é projetado para ser executado em ambientes Linux e utiliza paralelismo para melhorar o desempenho.
 
@@ -194,7 +194,7 @@ O código `calculo_suporte_confianca.cpp` calcula o suporte e a confiança para 
 g++ calculo_suporte_confianca.cpp -o calculo_suporte_confianca -lpthread
 ./calculo_suporte_confianca
 ```
-## Entrada e Saída
+### Entrada e Saída
 
 * **Entrada:**
     * `poker-hand-training.data` e `poker-hand-testing.data` (caminhos podem variar) - Contêm dados de tuplas e classes.
@@ -215,6 +215,7 @@ Este código é útil para a análise de dados e a descoberta de regras de assoc
 * **Otimizações:**
     * Explorar algoritmos mais eficientes para gerar combinações e calcular suporte e confiança, especialmente para grandes conjuntos de dados.
     * Considerar o uso de estruturas de dados mais adequadas para os cálculos.
+    * Utilizar como limite superior a similaridade de jaccard, entre os pares de tuplas, para o calculo de suporte e confiança, ao definir um valor como 55%, e só calcular o suporte/confiança quando o valor for igual ou maior. 
 * **Flexibilidade:**
     * Permitir a configuração de diferentes medidas de suporte e confiança (e.g., lift, confiança condicional).
     * Adaptar o código para trabalhar com diferentes formatos de entrada.
@@ -222,6 +223,19 @@ Este código é útil para a análise de dados e a descoberta de regras de assoc
     * Implementar uma interface para visualizar os resultados de forma gráfica (e.g., utilizando bibliotecas como Matplotlib ou Plotly).
 
 Com estas melhorias, o código pode ser aplicado a uma variedade de problemas de mineração de dados e se tornar uma ferramenta mais poderosa e versátil.
+### Função `runProgram`
+
+A função `runProgram` é responsável por executar um programa externo a partir do código C++. Ela leva o nome do programa (sem extensão) como argumento e verifica o sistema operacional para executar o programa de forma adequada.
+
+* **`#ifdef _WIN32`:** Bloco condicional que verifica se o código está sendo compilado no Windows.
+    * Utiliza a API do Windows (`CreateProcessA`, `WaitForSingleObject`, etc.) para criar e esperar por um processo filho que executará o programa desejado.
+    * Adiciona a extensão `.exe` ao nome do programa antes da execução.
+    * Verifica o código de saída do programa para detectar erros.
+* **`#else`:** Bloco condicional executado em sistemas operacional diferentes do Windows (presumivelmente Linux).
+    * Utiliza a função `fork` para criar um processo filho.
+    * No processo filho, utiliza `execl` para substituir o processo atual pelo programa externo.
+    * No processo pai, utiliza `waitpid` para esperar o processo filho terminar e verifica o código de saída para detectar erros.
+
 ### Função `main`
 
 [![main](https://img.shields.io/badge/main-View%20Code-blue)](https://github.com/ImArthz/Aeds-Poker/blob/main/c%2B%2B%20test/main.cpp)
@@ -239,9 +253,6 @@ A função `main` é o ponto de entrada do programa.
 * A função `runProgram` poderia ser aprimorada para receber o caminho completo do programa externo como argumento, tornando-a mais flexível.
 * O código poderia ser refatorado para evitar a duplicação das chamadas a `runProgram`.
 ## Conclusão Final: Trabalho de Algoritmo de Classificação
-Michel Pires, Centro Federal de Educação Tecnológica de Minas Gerais
-
-Data: 16 de Julho de 2024
 
 ### 1. Resumo do Trabalho
 Neste trabalho, desenvolvemos e avaliamos um algoritmo de classificação baseado no Lazy Associative Classification (LAC). O LAC utiliza uma abordagem "preguiçosa" para a classificação, gerando a base de dados necessária para as previsões apenas durante o processo de classificação. Utilizamos listas, pilhas, filas e tabelas hash para implementar este algoritmo, com o objetivo de classificar novas entradas com base em dados de treinamento fornecidos.
@@ -265,11 +276,69 @@ O trabalho foi documentado de acordo com os requisitos estabelecidos, incluindo:
 * Descrição detalhada das fases do projeto.
 * Análise de complexidade dos algoritmos.
 * Instruções de execução no arquivo README.md.
-### 4. Resumo das Complexidades
+### 4. Análise de Complexidade das Funções 
 
-- **similaridade_jaccard.cpp**: O(L * C + T log T + CL log CL + T^2 * M + S)
-- **leitura_input.cpp**: O(L * C + T * M + C * L)
-- **calculo_suporte_confianca.cpp**: O(L * C + T log T + CL log CL + CL * 2^N * (M + N))
+## Análise de Complexidade das Funções de Suporte e Confiança
+
+1. **Função `calculateSupport`**
+   - **Complexidade:** O(n + m), onde `n` é o tamanho de `tupleLines` e `m` é o tamanho de `classLines`, devido ao uso da função `set_intersection`.
+
+2. **Função `calculateConfidence`**
+   - **Complexidade:** O(n + m), similar à `calculateSupport`.
+
+3. **Função `generateCombinations`**
+   - **Complexidade:** O(2^n), pois a função gera todas as combinações possíveis de um conjunto de elementos.
+
+4. **Função `calculateSupportAndConfidence`**
+   - **Complexidade:** O(C * n * 2^n * (n + m)), onde:
+     - `C` é o número de classes.
+     - `n` é o tamanho da `instance`.
+     - `m` é o tamanho de `classLines`.
+   - A complexidade é determinada pela combinação de loops e a geração de combinações.
+
+5. **Função `main`**
+   - **Complexidade:** O(N * C * n * 2^n * (n + m)), onde:
+     - `N` é o número de linhas no arquivo de teste.
+     - A função `calculateSupportAndConfidence` é chamada para cada linha do arquivo de teste.
+
+## Análise de Complexidade das Funções de Leitura de Inputs
+
+1. **Estrutura `TupleHash`**
+   - **Complexidade:** O(1), para a função de hash.
+
+2. **Classe `DataProcessor`**
+   - **Função `processFile`**
+     - **Complexidade:** O(L * P), onde `L` é o número de linhas e `P` é o número de elementos por linha.
+   - **Função `processLine`**
+     - **Complexidade:** O(P), devido à leitura e inserção dos elementos.
+   - **Função `writeTupleMapToFile`**
+     - **Complexidade:** O(T * L), onde `T` é o número de tuplas e `L` é o número de linhas associadas a cada tupla.
+   - **Função `writeClassMapToFile`**
+     - **Complexidade:** O(C * L), onde `C` é o número de classes.
+
+3. **Função `main`**
+   - **Complexidade:** O(L * P + T * L + C * L).
+
+### Análise de Complexidade das Funções de Jaccard
+
+1. **Função `loadTupleMap`**
+   - **Complexidade:** O(L * (V log V + log N)), onde:
+     - `L` é o número de linhas.
+     - `V` é o número de valores por linha.
+     - `N` é o número de chaves no mapa.
+
+2. **Função `calculateJaccard`**
+   - **Complexidade:** O(S1 log S1 + S2 log S2), onde `S1` e `S2` são os tamanhos dos conjuntos.
+
+3. **Função `calculateAllSimilarities`**
+   - **Complexidade:** O(N^2 * (S log S)), onde `N` é o número de chaves e `S` é o tamanho médio dos conjuntos.
+
+4. **Função `writeSimilaritiesToFile`**
+   - **Complexidade:** O(M), onde `M` é o número de similaridades.
+
+5. **Função `main`**
+   - **Complexidade:** Dominada por O(N^2 * (S log S)).
+
 ### 5. Conclusão
 O algoritmo LAC mostrou-se eficiente para classificação com base em regras de associação. Apesar de algumas limitações, o trabalho cumpriu os objetivos estabelecidos.
 

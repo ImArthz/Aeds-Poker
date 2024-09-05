@@ -183,19 +183,6 @@ Este código é útil para a análise de dados e a descoberta de regras de assoc
     * Implementar uma interface para visualizar os resultados de forma gráfica (e.g., utilizando bibliotecas como Matplotlib ou Plotly).
 
 Com estas melhorias, o código pode ser aplicado a uma variedade de problemas de mineração de dados e se tornar uma ferramenta mais poderosa e versátil.
-### Função `runProgram`
-
-A função `runProgram` é responsável por executar um programa externo a partir do código C++. Ela leva o nome do programa (sem extensão) como argumento e verifica o sistema operacional para executar o programa de forma adequada.
-
-* **`#ifdef _WIN32`:** Bloco condicional que verifica se o código está sendo compilado no Windows.
-    * Utiliza a API do Windows (`CreateProcessA`, `WaitForSingleObject`, etc.) para criar e esperar por um processo filho que executará o programa desejado.
-    * Adiciona a extensão `.exe` ao nome do programa antes da execução.
-    * Verifica o código de saída do programa para detectar erros.
-* **`#else`:** Bloco condicional executado em sistemas operacional diferentes do Windows (presumivelmente Linux).
-    * Utiliza a função `fork` para criar um processo filho.
-    * No processo filho, utiliza `execl` para substituir o processo atual pelo programa externo.
-    * No processo pai, utiliza `waitpid` para esperar o processo filho terminar e verifica o código de saída para detectar erros.
-
 
 ### 1. Resumo do Trabalho
 Neste trabalho, desenvolvemos e avaliamos um algoritmo de classificação baseado no Lazy Associative Classification (LAC). O LAC utiliza uma abordagem "preguiçosa" para a classificação, gerando a base de dados necessária para as previsões apenas durante o processo de classificação. Utilizamos listas, pilhas, filas e tabelas hash para implementar este algoritmo, com o objetivo de classificar novas entradas com base em dados de treinamento fornecidos.
@@ -214,12 +201,7 @@ Além disso, o suporte também apresenta variações, com algumas linhas mostran
 
 Esses resultados são úteis para entender as relações e padrões nos dados, e podem fornecer insights para futuras análises e decisões relacionadas ao problema em questão. No entanto, uma análise mais detalhada e a consideração de mais linhas de dados podem ser necessárias para obter conclusões mais robustas e para validar essas observações preliminares.
 
-### 3. Considerações sobre a Documentação e Entrega
-O trabalho foi documentado de acordo com os requisitos estabelecidos, incluindo:
-* Descrição detalhada das fases do projeto.
-* Análise de complexidade dos algoritmos.
-* Instruções de execução no arquivo README.md.
-### 4. Análise de Complexidade das Funções 
+### 3. Análise de Complexidade das Funções 
 
 ## Análise de Complexidade das Funções de Suporte e Confiança
 
@@ -262,30 +244,11 @@ O trabalho foi documentado de acordo com os requisitos estabelecidos, incluindo:
 3. **Função `main`**
    - **Complexidade:** O(L * P + T * L + C * L).
 
-### Análise de Complexidade das Funções de Jaccard
 
-1. **Função `loadTupleMap`**
-   - **Complexidade:** O(L * (V log V + log N)), onde:
-     - `L` é o número de linhas.
-     - `V` é o número de valores por linha.
-     - `N` é o número de chaves no mapa.
-
-2. **Função `calculateJaccard`**
-   - **Complexidade:** O(S1 log S1 + S2 log S2), onde `S1` e `S2` são os tamanhos dos conjuntos.
-
-3. **Função `calculateAllSimilarities`**
-   - **Complexidade:** O(N^2 * (S log S)), onde `N` é o número de chaves e `S` é o tamanho médio dos conjuntos.
-
-4. **Função `writeSimilaritiesToFile`**
-   - **Complexidade:** O(M), onde `M` é o número de similaridades.
-
-5. **Função `main`**
-   - **Complexidade:** Dominada por O(N^2 * (S log S)).
-
-### 5. Conclusão
+### 4. Conclusão
 O algoritmo LAC mostrou-se eficiente para classificação com base em regras de associação. Apesar de algumas limitações, o trabalho cumpriu os objetivos estabelecidos.
 
-### 6. Contribuidores
+### 5. Contribuidores
 
 Feito Por : 
 
